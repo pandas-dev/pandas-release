@@ -13,6 +13,9 @@ PANDAS_VERSION="${1:1}"
 PANDAS_SHA=$(openssl dgst -sha256 pandas/dist/pandas-${PANDAS_VERSION}.tar.gz | cut -d ' ' -f 2)
 
 pushd pandas-feedstock
+git remote set-url upstream https://github.com/conda-forge/pandas-feedstock
+git remote set-url origin https://github.com/TomAugspurger/pandas-feedstock
+
 git checkout master
 git pull upstream
 
@@ -25,6 +28,7 @@ sed -i 's/number: .*/number: 0/' recipe/meta.yaml
 
 git add recipe/meta.yaml
 git commit -m "RLS $PANDAS_VERSION"
-git diff HEAD~1 | cat
+git diff --no-pager HEAD~1
 
+# git push -u origin RLS-"${PANDAS_VERSION}"
 popd

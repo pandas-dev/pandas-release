@@ -40,7 +40,7 @@ conda-forge:
 	./scripts/conda-forge.sh $(TAG)
 
 wheels:
-	echo TODO
+	./scripts/wheels.sh $(TAG)
 
 download_wheels:
 	echo TODO

@@ -11,6 +11,10 @@ fi
 PANDAS_VERSION=${1}
 
 pushd pandas-wheels
+
+git remote set-url upstream https://github.com/MacPython/pandas-wheels
+git remote set-url origin https://github.com/TomAugspurger/pandas-wheels
+
 git checkout master
 git pull upstream
 
@@ -22,5 +26,7 @@ sed -i 's/BUILD_COMMIT=v.*/BUILD_COMMIT='${PANDAS_VERSION}'/' .travis.yml
 git add .travis.yml
 git commit -m "RLS $PANDAS_VERSION"
 git --no-pager diff HEAD~1
+
+# git push -u origin RLS-"${PANDAS_VERSION}"
 
 popd
