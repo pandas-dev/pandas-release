@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -e
+
+if [[ $1 != v* ]];
+then
+    echo "Invalid tag $1"
+    echo "Must be formatted like vX.X.X"
+	exit 1
+fi
+
+PANDAS_VERSION=${1}
+
+pushd pandas-wheels
+git checkout master
+git pull upstream
+
+echo `git status`
+git checkout -B RLS-"${PANDAS_VERSION}"
+
+sed -i 's/BUILD_COMMIT=v.*/BUILD_COMMIT='${PANDAS_VERSION}'/' .travis.yml
+
+git add .travis.yml
+git commit -m "RLS $PANDAS_VERSION"
+git --no-pager diff HEAD~1
+
+popd
