@@ -19,9 +19,11 @@ tag:
 	./scripts/tag.sh $(TAG)
 
 doc:
-	cd pandas && python setup.py build_ext -i -j 4
-	cd pandas && python -m pip install -e .
-	cd pandas/doc && \
+	rm -rf pandas-docs
+	git clone pandas pandas-docs
+	cd pandas-docs && python setup.py build_ext -i -j 4 && \
+	python -m pip install -e . && \
+	cd doc && \
   	    ./make.py clean && \
 	    ./make.py html && \
 	    ./make.py zip_html && \

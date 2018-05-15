@@ -28,7 +28,7 @@ sed -i 's/number: .*/number: 0/' recipe/meta.yaml
 
 git add recipe/meta.yaml
 git commit -m "RLS $PANDAS_VERSION"
-git diff --no-pager HEAD~1
+git --no-pager diff HEAD~1
 
-# git push -u origin RLS-"${PANDAS_VERSION}"
+git push -u origin RLS-"${PANDAS_VERSION}"
 popd

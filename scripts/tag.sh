@@ -8,8 +8,8 @@ then
 	git reset --hard origin/master
 	git clean -xdf
 	echo "Creating tag: $1"
-	git commit --allow-empty -m 'RLS: $1'
-	git tag -a $1 -m 'Version $1'
+	git commit --allow-empty -m "RLS: ${1:1}"
+	git tag -a $1 -m "Version ${1:1}"
 else
 	echo "Invalid tag $1"
     echo "Must be formatted like vX.X.X"
