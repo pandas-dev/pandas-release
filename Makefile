@@ -1,5 +1,5 @@
 TAG ?= v0.23.0
-PANDAS_VERRSION=$(TAG:v%=%)
+PANDAS_VERSION=$(TAG:v%=%)
 
 conda-test:
 	conda build pandas/conda.recipe --numpy 1.11 --python 3.6
@@ -29,6 +29,10 @@ doc:
 	    ./make.py zip_html && \
 	    ./make.py latex_forced
 
+upload-doc: 
+	rsync -rv -e ssh pandas-docs/doc/build/html/ pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/
+	ssh pandas.pydata.org "cd /usr/share/nginx/pandas/pandas-docs && ln -sfn version/$(PANDAS_VERSION) stable && cd version && ln -sfn $(PANDAS_VERSION) $(PANDAS_VERSION:%.0=%)"
+
 push-tag:
 	./scripts/push-tag.sh $(TAG)
 
@@ -45,5 +49,7 @@ wheels:
 	./scripts/wheels.sh $(TAG)
 
 download_wheels:
-	echo TODO
+	cd pandas && python scripts/download_wheels.py
 
+upload_pypi:
+	twine upload dist/* --skip-existing
