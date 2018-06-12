@@ -1,5 +1,15 @@
-TAG ?= v0.23.0
+TAG ?= v0.23.1
 PANDAS_VERSION=$(TAG:v%=%)
+GH_USERNAME ?= TomAugspurger
+
+
+update-repos:
+	pushd pandas           && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas            && git remote update && popd && \
+	pushd pandas-website   && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-website    && git remote update && popd && \
+	pushd pandas-website   && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-website    && git remote update && popd && \
+	pushd pandas-wheels    && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-wheels     && git remote update && popd && \
+	pushd pandas-feedstock && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-feedstock  && git remote update && popd
+
 
 conda-test:
 	conda build pandas/conda.recipe --numpy 1.11 --python 3.6
