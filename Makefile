@@ -19,9 +19,15 @@ conda-test:
 
 
 pip-test:
-	cd pandas && git clean -xdf pandas && python setup.py bdist_wheel
 	python3 -m venv pandas-$(PANDAS_VERSION)-venv
-	pandas-$(PANDAS_VERSION)-venv/bin/python -m pip install pandas/dist/*.whl pytest
+	git clone pandas pandas-$(PANDAS_VERSION)-venv/pandas
+	pushd pandas-$(PANDAS_VERSION)-venv && \
+	  ./bin/python -m pip install -U pip wheel setuptools && \
+	  ./bin/python -m pip install -U pytz python-dateutil numpy Cython && \
+		pushd pandas && \
+		  ../bin/python setup.py bdist_wheel  && \
+		podd && \
+	  ./bin/python -m pip install pandas/dist/pandas-*.whl && popd
 	pandas-$(PANDAS_VERSION)-venv/bin/python -c "import pandas; pandas.test()"
 
 
