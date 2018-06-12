@@ -11,7 +11,7 @@ update-repos:
 
 
 conda-test:
-	conda build pandas/conda.recipe --numpy 1.11 --python 3.6
+	LDFLAGS="-headerpad_max_install_name" conda build pandas/conda.recipe --numpy 1.11 --python 3.6
 	conda create -n pandas-$(TAG:v%=%) numpy=1.11 python=3.6 pandas pytest
 	conda install -n pandas-$(TAG:v%=%) pandas --use-local
 	source activate pandas-$(TAG:v%=%)
@@ -19,7 +19,7 @@ conda-test:
 
 
 pip-test:
-	cd pandas && python setup.py bdist_wheel
+	cd pandas && git clean -xdf pandas && python setup.py bdist_wheel
 	python3 -m venv pandas-$(PANDAS_VERSION)-venv
 	pandas-$(PANDAS_VERSION)-venv/bin/python -m pip install pandas/dist/*.whl pytest
 	pandas-$(PANDAS_VERSION)-venv/bin/python -c "import pandas; pandas.test()"
@@ -45,7 +45,7 @@ upload-doc:
 	ssh pandas.pydata.org "cd /usr/share/nginx/pandas/pandas-docs && ln -sfn version/$(PANDAS_VERSION) stable && cd version && ln -sfn $(PANDAS_VERSION) $(PANDAS_VERSION:%.0=%)"
 
 push-tag:
-	./scripts/push-tag.sh $(TAG)
+	pushd pandas && ./scripts/push-tag.py $(TAG) && popd
 
 pandas/dist/%.tar.gz:
 	cd pandas && git clean -xdf && python setup.py cython && python setup.py sdist --formats=gztar
