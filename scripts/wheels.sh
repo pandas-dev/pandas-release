@@ -27,6 +27,6 @@ git add .travis.yml
 git commit -m "RLS $PANDAS_VERSION"
 git --no-pager diff HEAD~1
 
-# git push -u origin RLS-"${PANDAS_VERSION}"
+git push -u origin RLS-"${PANDAS_VERSION}"
 
 popd
