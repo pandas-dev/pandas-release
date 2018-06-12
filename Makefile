@@ -12,8 +12,8 @@ update-repos:
 
 conda-test:
 	LDFLAGS="-headerpad_max_install_name" conda build pandas/conda.recipe --numpy 1.11 --python 3.6
-	conda create -n pandas-$(TAG:v%=%) numpy=1.11 python=3.6 pandas pytest
-	conda install -n pandas-$(TAG:v%=%) pandas --use-local
+	LDFLAGS="-headerpad_max_install_name" conda create -n pandas-$(TAG:v%=%) numpy=1.11 python=3.6 pandas pytest
+	LDFLAGS="-headerpad_max_install_name" conda install -n pandas-$(TAG:v%=%) pandas --use-local
 	source activate pandas-$(TAG:v%=%)
 	python -c "import pandas; pandas.test()"
 
@@ -32,13 +32,15 @@ tag:
 doc:
 	rm -rf pandas-docs
 	git clone pandas pandas-docs
-	cd pandas-docs && python setup.py build_ext -i -j 4 && \
+	pushd pandas-docs && python setup.py build_ext -i -j 4 && \
 	python -m pip install -e . && \
-	cd doc && \
+	cd pushd doc && \
   	    ./make.py clean && \
 	    ./make.py html && \
 	    ./make.py zip_html && \
-	    ./make.py latex_forced
+	    ./make.py latex_forced && \
+	popd && popd
+
 
 upload-doc: 
 	rsync -rv -e ssh pandas-docs/doc/build/html/ pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/
@@ -53,7 +55,7 @@ pandas/dist/%.tar.gz:
 github-release:
 	echo TODO
 
-conda-forge:
+conda-forge: pandas/dist/$(TAG).tar.gz
 	./scripts/conda-forge.sh $(TAG)
 
 wheels:
