@@ -4,11 +4,10 @@ GH_USERNAME ?= TomAugspurger
 
 
 update-repos:
-	pushd pandas           && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas            && git remote update && popd && \
-	pushd pandas-website   && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-website    && git remote update && popd && \
-	pushd pandas-website   && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-website    && git remote update && popd && \
-	pushd pandas-wheels    && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-wheels     && git remote update && popd && \
-	pushd pandas-feedstock && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-feedstock  && git remote update && popd
+	pushd pandas           && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas            && git remote update && git checkout master && git reset --hard upstream/master && popd && \
+	pushd pandas-website   && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-website    && git remote update && git checkout master && git reset --hard upstream/master && popd && \
+	pushd pandas-wheels    && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-wheels     && git remote update && git checkout master && git reset --hard upstream/master && popd && \
+	pushd pandas-feedstock && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-feedstock  && git remote update && git checkout master && git reset --hard upstream/master && popd
 
 
 conda-test:
@@ -27,7 +26,7 @@ pip-test:
 
 
 tag:
-	pushd pandas && ../scripts/tag.py $(TAG) && podp
+	pushd pandas && ../scripts/tag.py $(TAG) && popd
 
 
 doc:

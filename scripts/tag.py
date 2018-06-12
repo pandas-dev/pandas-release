@@ -17,6 +17,17 @@ def check_tag(tag):
     return tag
 
 
+def checkout(tag):
+    if tag[-1] == '0':
+        # off master
+        base = 'master'
+    else:
+        base = '.'.join([tag[1:].rsplit('.', 1)[0], 'x'])
+
+    subprocess.check_call(['git', 'checkout', base])
+    subprocess.check_call(['git', 'pull', '--ff-only', 'upstream', base])
+
+
 def commit(tag):
     subprocess.check_call(['git', 'clean', '-xdf'])
     print("Creating tag {}".format(tag))
@@ -35,6 +46,7 @@ def parse_args(args=None):
 
 def main(args=None):
     args = parse_args(args)
+    checkout(args.tag)
     commit(args.tag)
 
 
