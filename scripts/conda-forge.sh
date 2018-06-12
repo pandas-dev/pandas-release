@@ -30,5 +30,7 @@ git add recipe/meta.yaml
 git commit -m "RLS $PANDAS_VERSION"
 git --no-pager diff HEAD~1
 
+conda-smithy rerender --commit
+
 git push -u origin RLS-"${PANDAS_VERSION}"
 popd

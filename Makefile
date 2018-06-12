@@ -23,12 +23,12 @@ pip-test:
 	git clone pandas pandas-$(PANDAS_VERSION)-venv/pandas
 	pushd pandas-$(PANDAS_VERSION)-venv && \
 	  ./bin/python -m pip install -U pip wheel setuptools && \
-	  ./bin/python -m pip install -U pytz python-dateutil numpy Cython && \
+	  ./bin/python -m pip install -U pytz python-dateutil numpy Cython pytest && \
 		pushd pandas && \
 		  ../bin/python setup.py bdist_wheel  && \
-		podd && \
-	  ./bin/python -m pip install pandas/dist/pandas-*.whl && popd
-	pandas-$(PANDAS_VERSION)-venv/bin/python -c "import pandas; pandas.test()"
+		popd && \
+	  ./bin/python -m pip install pandas/dist/pandas-*.whl && \
+	  ./bin/python -c "import pandas; pandas.test()" && popd
 
 
 tag:
@@ -61,7 +61,7 @@ pandas/dist/%.tar.gz:
 github-release:
 	echo TODO
 
-conda-forge: pandas/dist/$(TAG).tar.gz
+conda-forge:
 	./scripts/conda-forge.sh $(TAG)
 
 wheels:
