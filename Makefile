@@ -25,8 +25,10 @@ pip-test:
 	pandas-$(PANDAS_VERSION)-venv/bin/python -m pip install pandas/dist/*.whl pytest
 	pandas-$(PANDAS_VERSION)-venv/bin/python -c "import pandas; pandas.test()"
 
+
 tag:
-	./scripts/tag.sh $(TAG)
+	pushd pandas && ../scripts/tag.py $(TAG) && podp
+
 
 doc:
 	rm -rf pandas-docs
