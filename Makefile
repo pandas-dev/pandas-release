@@ -50,6 +50,7 @@ wheels:
 
 download_wheels:
 	cd pandas && python scripts/download_wheels.py
+	# TODO: Fetch from https://www.lfd.uci.edu/~gohlke/pythonlibs/
 
-upload_pypi:
-	twine upload dist/* --skip-existing
+upload-pypi:
+	twine upload pandas/dist/* --skip-existing
