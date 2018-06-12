@@ -53,7 +53,7 @@ upload-doc:
 	ssh pandas.pydata.org "cd /usr/share/nginx/pandas/pandas-docs && ln -sfn version/$(PANDAS_VERSION) stable && cd version && ln -sfn $(PANDAS_VERSION) $(PANDAS_VERSION:%.0=%)"
 
 push-tag:
-	pushd pandas && ./scripts/push-tag.py $(TAG) && popd
+	pushd pandas && ../scripts/push-tag.py $(TAG) && popd
 
 pandas/dist/%.tar.gz:
 	cd pandas && git clean -xdf && python setup.py cython && python setup.py sdist --formats=gztar
