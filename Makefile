@@ -74,8 +74,8 @@ conda-forge:
 wheels:
 	./scripts/wheels.sh $(TAG)
 
-download_wheels:
-	cd pandas && python scripts/download_wheels.py
+download-wheels:
+	cd pandas && python scripts/download_wheels.py $(PANDAS_VERSION)
 	# TODO: Fetch from https://www.lfd.uci.edu/~gohlke/pythonlibs/
 
 upload-pypi:
