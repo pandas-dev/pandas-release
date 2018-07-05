@@ -26,11 +26,10 @@ def update_releases(tag):
     with open("releases.json", "r") as f:
         releases = json.load(f)
 
-    releases.append({'version': ver, 'date': date})
-
     versions = {x['version'] for x in releases}
     assert ver not in versions
 
+    releases.append({'version': ver, 'date': date})
     releases = sorted(releases, reverse=True, key=lambda x: x['version'])
 
     with open("releases.json", "w") as f:
