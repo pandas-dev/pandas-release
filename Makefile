@@ -72,7 +72,7 @@ conda-forge:
 	./scripts/conda-forge.sh $(TAG)
 
 wheels:
-	./scripts/wheels.sh $(TAG)
+	./scripts/wheels.sh $(TAG) $(GH_USERNAME)
 
 download-wheels:
 	cd pandas && python scripts/download_wheels.py $(PANDAS_VERSION)

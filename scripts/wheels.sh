@@ -13,7 +13,7 @@ PANDAS_VERSION=${1}
 pushd pandas-wheels
 
 git remote set-url upstream https://github.com/MacPython/pandas-wheels
-git remote set-url origin https://github.com/TomAugspurger/pandas-wheels
+git remote set-url origin https://github.com/${2}/pandas-wheels
 
 git checkout master
 git pull upstream
