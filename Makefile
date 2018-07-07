@@ -1,4 +1,4 @@
-TAG ?= v0.23.1
+TAG ?= v0.23.3
 PANDAS_VERSION=$(TAG:v%=%)
 GH_USERNAME ?= TomAugspurger
 
@@ -10,6 +10,9 @@ update-repos:
 	pushd pandas-feedstock && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-feedstock  && git remote update && git checkout master && git reset --hard upstream/master && popd
 
 
+tag:
+	pushd pandas && ../scripts/tag.py $(TAG) && popd
+
 conda-test:
 	LDFLAGS="-headerpad_max_install_name" conda build pandas/conda.recipe --numpy 1.11 --python 3.6
 	LDFLAGS="-headerpad_max_install_name" conda create -n pandas-$(TAG:v%=%) numpy=1.11 python=3.6 pandas pytest
@@ -17,10 +20,17 @@ conda-test:
 	source activate pandas-$(TAG:v%=%)
 	python -c "import pandas; pandas.test()"
 
-
 pip-test:
-	python3 -m venv pandas-$(PANDAS_VERSION)-venv
-	git clone pandas pandas-$(PANDAS_VERSION)-venv/pandas
+	conda update conda && \
+		conda create -n pandas-$(PANDAS_VERSION)-pip \
+		python=3 \
+		pytz \
+		python-dateutil \
+		numpy \
+		Cython \
+		pytest
+	source activate pandas-$(PANDAS_VERSION)-pip && \
+	git clone pandas pandas-$(PANDAS_VERSION)-venv/pandas \
 	pushd pandas-$(PANDAS_VERSION)-venv && \
 	  ./bin/python -m pip install -U pip wheel setuptools && \
 	  ./bin/python -m pip install -U pytz python-dateutil numpy Cython pytest && \
@@ -30,23 +40,17 @@ pip-test:
 	  ./bin/python -m pip install pandas/dist/pandas-*.whl && \
 	  ./bin/python -c "import pandas; pandas.test()" && popd
 
-
-tag:
-	pushd pandas && ../scripts/tag.py $(TAG) && popd
-
-
 doc:
 	rm -rf pandas-docs
 	git clone pandas pandas-docs
 	pushd pandas-docs && python setup.py build_ext -i -j 4 && \
 	python -m pip install -e . && \
-	cd pushd doc && \
+	pushd doc && \
   	    ./make.py clean && \
 	    ./make.py html && \
 	    ./make.py zip_html && \
 	    ./make.py latex_forced && \
 	popd && popd
-
 
 upload-doc: 
 	rsync -rv -e ssh pandas-docs/doc/build/html/            pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/
@@ -63,7 +67,11 @@ push-tag:
 	pushd pandas && ../scripts/push-tag.py $(TAG) && popd
 
 pandas/dist/%.tar.gz:
-	cd pandas && git clean -xdf && python setup.py cython && python setup.py sdist --formats=gztar
+	conda update -n base conda && \
+		conda create -n pandas-sdist-build python=3 Cython numpy python-dateutil pytz && \
+		&& source activate pandas-sdist-build && \
+		cd pandas && \
+		git clean -xdf && python setup.py cython && python setup.py sdist --formats=gztar
 
 github-release:
 	echo TODO
