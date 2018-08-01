@@ -3,12 +3,15 @@ PANDAS_VERSION=$(TAG:v%=%)
 GH_USERNAME ?= TomAugspurger
 
 
-update-repos:
-	pushd pandas           && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas            && git remote update && git checkout master && git reset --hard upstream/master && popd && \
-	pushd pandas-website   && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-website    && git remote update && git checkout master && git reset --hard upstream/master && popd && \
-	pushd pandas-wheels    && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-wheels     && git remote update && git checkout master && git reset --hard upstream/master && popd && \
-	pushd pandas-feedstock && git remote set-url origin https://github.com/$(GH_USERNAME)/pandas-feedstock  && git remote update && git checkout master && git reset --hard upstream/master && popd
+init-repos:
+	git clone https://github.com/pandas-dev/pandas            && git -C pandas remote rename origin upstream && git -C remote add origin https://github.com/$(GH_USERNAME)/pandas
+	git clone https://github.com/pandas-dev/pandas-website    && git -C pandas remote rename origin upstream && git -C remote add origin https://github.com/$(GH_USERNAME)/pandas-website
+	git clone https://github.com/MacPython/pandas-wheels      && git -C pandas remote rename origin upstream && git -C remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
+	git clone https://github.com/conda-forge/pandas-feedstock && git -C pandas remote rename origin upstream && git -C remote add origin https://github.com/$(GH_USERNAME)/pandas-feedstock
 
+
+update-repos:
+	git -C pandas checkout master && git -C pandas pull
 
 tag:
 	pushd pandas && ../scripts/tag.py $(TAG) && popd
