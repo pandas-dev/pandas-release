@@ -71,10 +71,10 @@ pip-test: dist/$(TARGZ)
 # -----------------------------------------------------------------------------
 
 docker-doc:
-	docker build -t pandas-dask -f docker-files/docs/Dockerfile .
+	docker build -t pandas-docs -f docker-files/docs/Dockerfile .
 
 doc:
-	docker run -d -it --name devtest --mount type=bind,source="$(pwd)/pandas",target=/pandas continuumio/miniconda3:latest
+	docker run -d -it --name pandas-docs --mount type=bind,source="$(pwd)/pandas",target=/pandas pandas-dask bash
 
 upload-doc:
 	rsync -rv -e ssh pandas-docs/doc/build/html/            pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/
