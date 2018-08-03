@@ -1,4 +1,4 @@
-TAG ?= v0.23.3
+TAG ?= v0.23.4
 PANDAS_VERSION=$(TAG:v%=%)
 TARGZ=pandas-$(PANDAS_VERSION).tar.gz
 GH_USERNAME ?= TomAugspurger
@@ -68,6 +68,9 @@ pip-test:
 # -----------------------------------------------------------------------------
 # Docs
 # -----------------------------------------------------------------------------
+
+docker-doc:
+	docker build -t pandas-dask -f docker-files/docs/Dockerfile .
 
 doc:
 	docker run -d -it --name devtest --mount type=bind,source="$(pwd)/pandas",target=/pandas continuumio/miniconda3:latest
