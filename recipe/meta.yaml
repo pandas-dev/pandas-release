@@ -1,0 +1,46 @@
+{% set version = "0.23.4" %}
+
+package:
+  name: pandas
+  version: {{ version }}
+
+source:
+    # recipe/meta.yaml
+    path: ../pandas/dist/pandas-0.23.4.tar.gz
+
+build:
+  number: 1
+  script: python -m pip install --no-deps --ignore-installed .
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - python
+    - pip
+    - cython
+    - numpy
+  run:
+    - python
+    - {{ pin_compatible('numpy') }}
+    - python-dateutil >=2.5.*
+    - pytz
+
+test:
+  imports:
+    - pandas
+
+about:
+  home: http://pandas.pydata.org
+  license: BSD 3-clause
+  license_file: LICENSE
+  summary: 'High-performance, easy-to-use data structures and data analysis tools.'
+
+extra:
+  recipe-maintainers:
+    - jreback
+    - jorisvandenbossche
+    - msarahan
+    - ocefpaf
+    - TomAugspurger
