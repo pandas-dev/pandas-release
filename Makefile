@@ -4,14 +4,17 @@ GH_USERNAME ?= TomAugspurger
 
 
 init-repos:
-	git clone https://github.com/pandas-dev/pandas            && git -C pandas remote rename origin upstream && git -C remote add origin https://github.com/$(GH_USERNAME)/pandas
-	git clone https://github.com/pandas-dev/pandas-website    && git -C pandas remote rename origin upstream && git -C remote add origin https://github.com/$(GH_USERNAME)/pandas-website
-	git clone https://github.com/MacPython/pandas-wheels      && git -C pandas remote rename origin upstream && git -C remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
-	git clone https://github.com/conda-forge/pandas-feedstock && git -C pandas remote rename origin upstream && git -C remote add origin https://github.com/$(GH_USERNAME)/pandas-feedstock
+	git clone https://github.com/pandas-dev/pandas            && git -C pandas           remote rename origin upstream && git -C pandas 		  remote add origin https://github.com/$(GH_USERNAME)/pandas
+	git clone https://github.com/pandas-dev/pandas-website    && git -C pandas-website   remote rename origin upstream && git -C pandas-website   remote add origin https://github.com/$(GH_USERNAME)/pandas-website
+	git clone https://github.com/MacPython/pandas-wheels      && git -C pandas-wheels    remote rename origin upstream && git -C pandas-wheels    remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
+	git clone https://github.com/conda-forge/pandas-feedstock && git -C pandas-feedstock remote rename origin upstream && git -C pandas-feedstock remote add origin https://github.com/$(GH_USERNAME)/pandas-feedstock
 
 
 update-repos:
-	git -C pandas checkout master && git -C pandas pull
+	git -C pandas checkout master           && git -C pandas pull
+	git -C pandas-wheels checkout master    && git -C pandas-wheels pull
+	git -C pandas-website checkout master   && git -C pandas-website pull
+	git -C pandas-feedstock checkout master && git -C pandas-feedstock pull
 
 tag:
 	pushd pandas && ../scripts/tag.py $(TAG) && popd
@@ -44,16 +47,7 @@ pip-test:
 	  ./bin/python -c "import pandas; pandas.test()" && popd
 
 doc:
-	rm -rf pandas-docs
-	git clone pandas pandas-docs
-	pushd pandas-docs && python setup.py build_ext -i -j 4 && \
-	python -m pip install -e . && \
-	pushd doc && \
-  	    ./make.py clean && \
-	    ./make.py html && \
-	    ./make.py zip_html && \
-	    ./make.py latex_forced && \
-	popd && popd
+	docker run -d -it --name devtest --mount type=bind,source="$(pwd)/pandas",target=/pandas continuumio/miniconda3:latest
 
 upload-doc: 
 	rsync -rv -e ssh pandas-docs/doc/build/html/            pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/
