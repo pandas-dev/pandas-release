@@ -10,8 +10,8 @@ GH_USERNAME ?= TomAugspurger
 init-repos:
 	git clone https://github.com/pandas-dev/pandas            && git -C pandas           remote rename origin upstream && git -C pandas 		  remote add origin https://github.com/$(GH_USERNAME)/pandas
 	git clone https://github.com/pandas-dev/pandas-website    && git -C pandas-website   remote rename origin upstream && git -C pandas-website   remote add origin https://github.com/$(GH_USERNAME)/pandas-website
-	git clone https://github.com/MacPython/pandas-wheels      && git -C pandas-wheels    remote rename origin upstream && git -C pandas-wheels    remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
 	git clone https://github.com/conda-forge/pandas-feedstock && git -C pandas-feedstock remote rename origin upstream && git -C pandas-feedstock remote add origin https://github.com/$(GH_USERNAME)/pandas-feedstock
+	git clone --recursive https://github.com/MacPython/pandas-wheels      && git -C pandas-wheels    remote rename origin upstream && git -C pandas-wheels    remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
 
 update-repos:
 	git -C pandas checkout master           && git -C pandas pull
@@ -74,18 +74,28 @@ docker-doc:
 	docker build -t pandas-docs -f docker-files/docs/Dockerfile .
 
 doc:
-	docker run -d -it --name pandas-docs --mount type=bind,source="$(pwd)/pandas",target=/pandas pandas-dask bash
+	docker run -it \
+		--name=pandas-docs \
+		-v ${CURDIR}/pandas:/pandas \
+		-v ${CURDIR}/scripts/build-docs.sh:/build-docs.sh \
+		pandas-docs \
+		sh /build-docs.sh
+
 
 upload-doc:
-	rsync -rv -e ssh pandas-docs/doc/build/html/            pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/
-	rsync -rv -e ssh pandas-docs/doc/build/latex/pandas.pdf pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/pandas.pdf
+	rsync -rv -e ssh pandas/doc/build/html/            pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/
+	rsync -rv -e ssh pandas/doc/build/latex/pandas.pdf pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/pandas.pdf
 	ssh pandas.pydata.org "cd /usr/share/nginx/pandas/pandas-docs && ln -sfn version/$(PANDAS_VERSION) stable && cd version && ln -sfn $(PANDAS_VERSION) $(PANDAS_VERSION:%.0=%)"
 
 website:
 	pushd pandas-website && \
 		../scripts/update-website.py $(TAG) && \
+		git add . && \
+		git commit -m "RLS $(TAG)" && \
+		git push upstream master && \
+		make html && \
+		make upload && \
 	popd
-	echo TODO: build, push
 
 push-tag:
 	pushd pandas && ../scripts/push-tag.py $(TAG) && popd
@@ -111,4 +121,4 @@ download-wheels:
 	# TODO: Fetch from https://www.lfd.uci.edu/~gohlke/pythonlibs/
 
 upload-pypi:
-	twine upload pandas/dist/* --skip-existing
+	twine upload pandas/dist/pandas-$(PANDAS_VERSION)* --skip-existing
