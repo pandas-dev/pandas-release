@@ -6,3 +6,6 @@ COPY pandas /pandas
 RUN conda env create --file=/pandas/ci/travis-36-doc.yaml \
  && conda activate pandas \
  && conda uninstall -y --force pandas
+# TODO: combine with tex install when you rebuild
+RUN apt-get install -y xclip \
+ && apt-get clean
