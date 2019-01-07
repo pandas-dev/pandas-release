@@ -1,4 +1,4 @@
-TAG ?= v0.23.4
+TAG ?= v0.24.0rc1
 PANDAS_VERSION=$(TAG:v%=%)
 TARGZ=pandas-$(PANDAS_VERSION).tar.gz
 GH_USERNAME ?= TomAugspurger
@@ -24,14 +24,11 @@ update-repos:
 # -----------------------------------------------------------------------------
 
 tag:
+	# This doesn't push the tag
 	pushd pandas && ../scripts/tag.py $(TAG) && popd
 
-# -----------------------------------------------------------------------------
-# Git Tag
-# -----------------------------------------------------------------------------
-
-docker-image:
-	docker build -t tomaugspurger/pandas-build .
+docker-image: pandas
+	docker build -t pandas-build .
 
 # -----------------------------------------------------------------------------
 # sdist
@@ -56,7 +53,7 @@ conda-test:
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/recipe:/recipe \
 		pandas-build
-		# sh -c "conda build --numpy=1.11 /recipe --output-folder=/pandas/dist"
+		sh -c "conda build --numpy=1.11 /recipe --output-folder=/pandas/dist"
 
 pip-test: dist/$(TARGZ)
 	docker run -it \

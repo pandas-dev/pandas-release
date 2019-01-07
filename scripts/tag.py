@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 Tag a pandas release.
+
+This does not push the tag to upstream.
 """
 import argparse
 import subprocess
@@ -14,11 +16,13 @@ def check_tag(tag):
                                  "start with 'v'".format(tag))
     ver = version.parse(tag.lstrip('v'))
     assert isinstance(ver, version.Version), "Invalid tag '{}'".format(tag)
+    if 'rc' in tag:
+        assert '.rc' not in tag, "RC tags should be formatted like '.0rcX' "
     return tag
 
 
 def checkout(tag):
-    if tag[-1] == '0':
+    if tag[-1] == '0' or 'rc' in tag:
         # off master
         base = 'master'
     else:
