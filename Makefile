@@ -34,7 +34,7 @@ docker-image: pandas
 # sdist
 # -----------------------------------------------------------------------------
 
-dist/$(TARGZ):
+pandas/dist/$(TARGZ):
 	docker run -it --rm \
 		--name=pandas-sdist-build \
 		-v ${CURDIR}/pandas:/pandas \
@@ -55,13 +55,12 @@ conda-test:
 		pandas-build
 		sh -c "conda build --numpy=1.11 /recipe --output-folder=/pandas/dist"
 
-pip-test: dist/$(TARGZ)
+pip-test: pandas/dist/$(TARGZ)
 	docker run -it \
 		--name=pandas-pip-test \
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/scripts/pip_test.sh:/pip_test.sh \
-		pandas-build \
-		sh /pip_test.sh /pandas/dist/$(TARGZ)
+		pandas-build /bin/bash /pip_test.sh /pandas/dist/$(TARGZ)
 
 # -----------------------------------------------------------------------------
 # Docs

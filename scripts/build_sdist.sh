@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+conda update conda
+conda install -y conda-build numpy pytz python-dateutil nomkl Cython
+
 cd /pandas
 rm -rf dist
 git clean -xfd
