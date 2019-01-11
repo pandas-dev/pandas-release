@@ -1,15 +1,14 @@
-{% set version = "0.23.4" %}
+{% set version = "0.24.0rc1" %}
 
 package:
   name: pandas
   version: {{ version }}
 
 source:
-    # recipe/meta.yaml
-    path: ../pandas/dist/pandas-0.23.4.tar.gz
+  url: ../pandas/dist/pandas-{{ version }}.tar.gz
 
 build:
-  number: 1
+  number: 1000
   script: python -m pip install --no-deps --ignore-installed .
 
 requirements:
@@ -28,8 +27,11 @@ requirements:
     - pytz
 
 test:
-  imports:
-    - pandas
+  requires:
+    - pytest
+    - hypothesis
+  commands:
+    - python -c "import pandas; pandas.test()"
 
 about:
   home: http://pandas.pydata.org

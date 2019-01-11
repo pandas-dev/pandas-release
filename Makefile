@@ -30,6 +30,11 @@ tag:
 docker-image: pandas
 	docker build -t pandas-build .
 
+
+docker-doc:
+	docker build -t pandas-docs -f docker-files/docs/Dockerfile .
+
+
 # -----------------------------------------------------------------------------
 # sdist
 # -----------------------------------------------------------------------------
@@ -53,7 +58,7 @@ conda-test:
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/recipe:/recipe \
 		pandas-build
-		sh -c "conda build --numpy=1.11 /recipe --output-folder=/pandas/dist"
+		sh -c "conda build --numpy=1.12 /recipe --output-folder=/pandas/dist"
 
 pip-test: pandas/dist/$(TARGZ)
 	docker run -it \
@@ -65,9 +70,6 @@ pip-test: pandas/dist/$(TARGZ)
 # -----------------------------------------------------------------------------
 # Docs
 # -----------------------------------------------------------------------------
-
-docker-doc:
-	docker build -t pandas-docs -f docker-files/docs/Dockerfile .
 
 doc:
 	docker run -it \
