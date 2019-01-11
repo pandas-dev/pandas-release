@@ -106,9 +106,6 @@ push-tag:
 # 		&& source activate pandas-sdist-build && \
 # 		cd pandas && \
 # 		git clean -xdf && python setup.py cython && python setup.py sdist --formats=gztar
- (builds
-for osx-64, linux-64 and win-64 for Python 2.7, Python 3.5, and Python 3.6, and
-Python 3.7 are all available):
 
 github-release:
 	echo TODO

@@ -43,6 +43,7 @@ make init-repos
 
 TODO:
 
-- Put the `build-essential` install in the doc docker image, or change
-  pip test / doc build to use the same env, so the wheel can be shared
-- handle RC in push_tag
+- Put the `build-essential` install in the doc docker image
+- Update conda-forge to handle RC (branch off dev, etc.)
+- Update push-tag to handle RC
+- Update `.make.py` to not delete stuff
