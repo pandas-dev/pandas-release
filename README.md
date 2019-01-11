@@ -17,6 +17,14 @@ make docker-image docker-doc
 make pandas/dist/<>.sdist
 
 # Final Pip and Conda tests
+make pip test
+make conda test
+
+# Docs
+make doc
+
+# Remote stuff
+make push-tag
 
 
 ```
@@ -30,3 +38,11 @@ make pandas/dist/<>.sdist
 make init-repos
 
 ``````
+
+---
+
+TODO:
+
+- Put the `build-essential` install in the doc docker image, or change
+  pip test / doc build to use the same env, so the wheel can be shared
+- handle RC in push_tag

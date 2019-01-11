@@ -9,6 +9,9 @@ then
 	exit 1
 fi
 
+conda update -y conda-build
+conda update -y -c conda-forge conda-smithy conda-forge-pinning
+
 PANDAS_VERSION="${1:1}"
 PANDAS_SHA=$(openssl dgst -sha256 pandas/dist/pandas-${PANDAS_VERSION}.tar.gz | cut -d ' ' -f 2)
 

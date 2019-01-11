@@ -18,6 +18,7 @@ update-repos:
 	git -C pandas-wheels checkout master    && git -C pandas-wheels pull
 	git -C pandas-website checkout master   && git -C pandas-website pull
 	git -C pandas-feedstock checkout master && git -C pandas-feedstock pull
+	pushd pandas-wheels && git submodule update --recursive --remote && popd
 
 # -----------------------------------------------------------------------------
 # Git Tag
@@ -77,7 +78,7 @@ doc:
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/scripts/build-docs.sh:/build-docs.sh \
 		pandas-docs \
-		sh /build-docs.sh
+		/build-docs.sh
 
 
 upload-doc:
@@ -96,14 +97,18 @@ website:
 	popd
 
 push-tag:
+	# TODO: broken for RC
 	pushd pandas && ../scripts/push-tag.py $(TAG) && popd
 
-pandas/dist/%.tar.gz:
-	conda update -n base conda && \
-		conda create -n pandas-sdist-build python=3 Cython numpy python-dateutil pytz && \
-		&& source activate pandas-sdist-build && \
-		cd pandas && \
-		git clean -xdf && python setup.py cython && python setup.py sdist --formats=gztar
+# pandas/dist/%.tar.gz:
+# 	conda update -n base conda && \
+# 		conda create -n pandas-sdist-build python=3 Cython numpy python-dateutil pytz && \
+# 		&& source activate pandas-sdist-build && \
+# 		cd pandas && \
+# 		git clean -xdf && python setup.py cython && python setup.py sdist --formats=gztar
+ (builds
+for osx-64, linux-64 and win-64 for Python 2.7, Python 3.5, and Python 3.6, and
+Python 3.7 are all available):
 
 github-release:
 	echo TODO
