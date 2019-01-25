@@ -1,4 +1,4 @@
-TAG ?= v0.24.0rc1
+TAG ?= v0.24.0
 PANDAS_VERSION=$(TAG:v%=%)
 TARGZ=pandas-$(PANDAS_VERSION).tar.gz
 GH_USERNAME ?= TomAugspurger

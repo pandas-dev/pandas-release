@@ -3,10 +3,14 @@ Release automation for pandas.
 ## Steps to a release
 
 - [  ] Manually update 
-  1. `PANDAS_VERSION` in `Makefile`
-  2. `version` in `recipe/meta.yaml`
+  - [  ] `PANDAS_VERSION` in `Makefile`
+  - [  ]  `version` in `recipe/meta.yaml`
+- [  ] Update repos
 
 ```
+# Update repos
+make update-repos
+
 # Tag the release
 make tag
 
@@ -47,3 +51,4 @@ TODO:
 - Update conda-forge to handle RC (branch off dev, etc.)
 - Update push-tag to handle RC
 - Update `.make.py` to not delete stuff
+- Environment setup (conda)
