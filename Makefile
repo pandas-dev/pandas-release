@@ -122,4 +122,4 @@ download-wheels:
 	# TODO: Fetch from https://www.lfd.uci.edu/~gohlke/pythonlibs/
 
 upload-pypi:
-	twine upload pandas/dist/pandas-$(PANDAS_VERSION)* --skip-existing
+	twine upload pandas/dist/pandas-$(PANDAS_VERSION)*.{whl,tar.gz} --skip-existing

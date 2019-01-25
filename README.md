@@ -105,3 +105,4 @@ TODO:
 - Update push-tag to handle RC
 - Update `.make.py` to not delete stuff
 - Environment setup (conda)
+- upload doc needs to do symlinking (maybe works, just not with RC?)
