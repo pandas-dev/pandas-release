@@ -58,11 +58,11 @@ conda-test:
 		--name=pandas-conda-test \
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/recipe:/recipe \
-		pandas-build
+		pandas-build \
 		sh -c "conda build --numpy=1.12 /recipe --output-folder=/pandas/dist"
 
 pip-test: pandas/dist/$(TARGZ)
-	docker run -it \
+	docker run -it --rm \
 		--name=pandas-pip-test \
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/scripts/pip_test.sh:/pip_test.sh \

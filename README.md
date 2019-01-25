@@ -29,9 +29,13 @@ make doc
 
 # Remote stuff
 make push-tag
-
-
 ```
+
+# Finalize
+
+- [  ] Download Christoph's wheels and upload to PyPI
+- [  ] Announce Mailing List
+- [  ] Announce Twitter
 
 -----
 
