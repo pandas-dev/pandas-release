@@ -24,6 +24,10 @@ make pandas/dist/<>.sdist
 make pip test
 make conda test
 
+# Binaries
+make conda-forge
+make wheels
+
 # Docs
 make doc
 

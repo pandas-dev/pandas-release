@@ -73,7 +73,7 @@ pip-test: pandas/dist/$(TARGZ)
 # -----------------------------------------------------------------------------
 
 doc:
-	docker run -it \
+	docker run -it --rm \
 		--name=pandas-docs \
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/scripts/build-docs.sh:/build-docs.sh \
