@@ -65,6 +65,17 @@ Upload the wheels and sdist
 make upload-pypi
 ```
 
+Finalize the docs
+
+```
+make upload-doc
+make website
+```
+
+The website script is currenlty broken. You may need to manually
+add the next (dev) release, and remove any pre-releases.
+
+
 goto announce.
 
 
