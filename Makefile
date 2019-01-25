@@ -114,6 +114,7 @@ conda-forge:
 	./scripts/conda-forge.sh $(TAG)
 
 wheels:
+	rm pandas/dist/pandas-$(PANDAS_VERSION)-cp37m-linux_x86_64.whl
 	./scripts/wheels.sh $(TAG)
 
 download-wheels:
