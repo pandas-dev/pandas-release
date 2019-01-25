@@ -106,3 +106,4 @@ TODO:
 - Update `.make.py` to not delete stuff
 - Environment setup (conda)
 - upload doc needs to do symlinking (maybe works, just not with RC?)
+- .dev0 tag for the next release
