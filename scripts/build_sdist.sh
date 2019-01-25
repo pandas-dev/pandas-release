@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-conda update conda
+conda update -y conda
 conda install -y conda-build numpy pytz python-dateutil nomkl Cython
 
 cd /pandas
