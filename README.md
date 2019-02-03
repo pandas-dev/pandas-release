@@ -5,7 +5,7 @@ Release automation for pandas.
 - [  ] Manually update 
   - [  ] `PANDAS_VERSION` in `Makefile`
   - [  ]  `version` in `recipe/meta.yaml`
-- [  ] Update repos
+
 
 ```
 # Update repos
@@ -70,6 +70,7 @@ Finalize the docs
 ```
 make upload-doc
 make website
+make push-website
 ```
 
 The website script is currenlty broken. You may need to manually

@@ -1,4 +1,4 @@
-TAG ?= v0.24.0
+TAG ?= v0.24.1
 PANDAS_VERSION=$(TAG:v%=%)
 TARGZ=pandas-$(PANDAS_VERSION).tar.gz
 GH_USERNAME ?= TomAugspurger
@@ -27,6 +27,11 @@ update-repos:
 tag:
 	# This doesn't push the tag
 	pushd pandas && ../scripts/tag.py $(TAG) && popd
+
+
+# -----------------------------------------------------------------------------
+#  Builder Images
+# -----------------------------------------------------------------------------
 
 docker-image: pandas
 	docker build -t pandas-build .
@@ -91,35 +96,41 @@ website:
 		../scripts/update-website.py $(TAG) && \
 		git add . && \
 		git commit -m "RLS $(TAG)" && \
+		make html && \
+	popd
+
+
+
+make push-website:
+	pushd pandas-website && \
 		git push upstream master && \
 		make html && \
 		make upload && \
 	popd
 
+
 push-tag:
 	# TODO: broken for RC
 	pushd pandas && ../scripts/push-tag.py $(TAG) && popd
 
-# pandas/dist/%.tar.gz:
-# 	conda update -n base conda && \
-# 		conda create -n pandas-sdist-build python=3 Cython numpy python-dateutil pytz && \
-# 		&& source activate pandas-sdist-build && \
-# 		cd pandas && \
-# 		git clean -xdf && python setup.py cython && python setup.py sdist --formats=gztar
 
 github-release:
 	echo TODO
 
+
 conda-forge:
 	./scripts/conda-forge.sh $(TAG)
 
+
 wheels:
-	rm pandas/dist/pandas-$(PANDAS_VERSION)-cp37m-linux_x86_64.whl
+	rm -rf pandas/dist/pandas-$(PANDAS_VERSION)-cp37m-linux_x86_64.whl
 	./scripts/wheels.sh $(TAG)
+
 
 download-wheels:
 	cd pandas && python scripts/download_wheels.py $(PANDAS_VERSION)
 	# TODO: Fetch from https://www.lfd.uci.edu/~gohlke/pythonlibs/
+
 
 upload-pypi:
 	twine upload pandas/dist/pandas-$(PANDAS_VERSION)*.{whl,tar.gz} --skip-existing
