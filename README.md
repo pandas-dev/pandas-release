@@ -4,6 +4,7 @@ Release automation for pandas.
 
 - [  ] Manually update 
   - [  ] `PANDAS_VERSION` in `Makefile`
+  - [  ] `GH_USERNAME` in `Makefile`
   - [  ]  `version` in `recipe/meta.yaml`
 
 
