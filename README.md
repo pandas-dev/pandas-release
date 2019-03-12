@@ -22,8 +22,8 @@ make docker-image docker-doc
 make pandas/dist/<>.sdist
 
 # Final Pip and Conda tests. Do these in parallel.
-make pip test
-make conda test
+make pip-test
+make conda-test
 
 # Push the tag. No going back now.
 make push-tag

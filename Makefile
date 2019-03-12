@@ -1,7 +1,12 @@
-TAG ?= v0.24.1
+# TO EDIT
+TAG ?= v0.24.2
+GH_USERNAME ?= jorisvandenbossche
+
 PANDAS_VERSION=$(TAG:v%=%)
 TARGZ=pandas-$(PANDAS_VERSION).tar.gz
-GH_USERNAME ?= TomAugspurger
+
+# to ensure pushd and popd works
+SHELL := /bin/bash
 
 # -----------------------------------------------------------------------------
 # Host filesystem initialization
@@ -64,7 +69,7 @@ conda-test:
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/recipe:/recipe \
 		pandas-build \
-		sh -c "conda build --numpy=1.12 /recipe --output-folder=/pandas/dist"
+		sh -c "conda build --numpy=1.12 --python=3.6 /recipe --output-folder=/pandas/dist"
 
 pip-test: pandas/dist/$(TARGZ)
 	docker run -it --rm \
@@ -89,7 +94,7 @@ doc:
 upload-doc:
 	rsync -rv -e ssh pandas/doc/build/html/            pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/
 	rsync -rv -e ssh pandas/doc/build/latex/pandas.pdf pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/pandas.pdf
-	ssh pandas.pydata.org "cd /usr/share/nginx/pandas/pandas-docs && ln -sfn version/$(PANDAS_VERSION) stable && cd version && ln -sfn $(PANDAS_VERSION) $(PANDAS_VERSION:%.0=%)"
+	ssh pandas.pydata.org "cd /usr/share/nginx/pandas/pandas-docs && ln -sfn version/$(PANDAS_VERSION) stable && cd version && ln -sfn $(PANDAS_VERSION) $(PANDAS_VERSION:%.2=%)"
 
 website:
 	pushd pandas-website && \
@@ -119,12 +124,13 @@ github-release:
 
 
 conda-forge:
-	./scripts/conda-forge.sh $(TAG)
+	./scripts/conda-forge.sh $(TAG) $(GH_USERNAME)
 
 
 wheels:
 	rm -rf pandas/dist/pandas-$(PANDAS_VERSION)-cp37m-linux_x86_64.whl
-	./scripts/wheels.sh $(TAG)
+	rm -rf pandas/dist/pandas-$(PANDAS_VERSION)-cp37-cp37m-linux_x86_64.whl
+	./scripts/wheels.sh $(TAG) $(GH_USERNAME)
 
 
 download-wheels:
