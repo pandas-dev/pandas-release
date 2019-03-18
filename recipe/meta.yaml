@@ -1,0 +1,48 @@
+{% set version = "0.24.1" %}
+
+package:
+  name: pandas
+  version: {{ version }}
+
+source:
+  url: ../pandas/dist/pandas-{{ version }}.tar.gz
+
+build:
+  number: 1000
+  script: python -m pip install --no-deps --ignore-installed .
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - python
+    - pip
+    - cython
+    - numpy
+  run:
+    - python
+    - {{ pin_compatible('numpy') }}
+    - python-dateutil >=2.5.*
+    - pytz
+
+test:
+  requires:
+    - pytest
+    - hypothesis
+  commands:
+    - python -c "import pandas; pandas.test()"
+
+about:
+  home: http://pandas.pydata.org
+  license: BSD 3-clause
+  license_file: LICENSE
+  summary: 'High-performance, easy-to-use data structures and data analysis tools.'
+
+extra:
+  recipe-maintainers:
+    - jreback
+    - jorisvandenbossche
+    - msarahan
+    - ocefpaf
+    - TomAugspurger

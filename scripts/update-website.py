@@ -20,17 +20,26 @@ def check_tag(tag):
 
 
 def update_releases(tag):
+
     ver = version.parse(tag).base_version
     date = datetime.date.today().strftime("%B %Y")
+
+    if 'rc' in tag:
+        data = {
+            'version': tag[1:],
+            'date': date
+        }
+        with open("pre_release.json", "w") as f:
+            json.dump(data, f, indent=2)
+        return
 
     with open("releases.json", "r") as f:
         releases = json.load(f)
 
-    releases.append({'version': ver, 'date': date})
-
     versions = {x['version'] for x in releases}
     assert ver not in versions
 
+    releases.append({'version': ver, 'date': date})
     releases = sorted(releases, reverse=True, key=lambda x: x['version'])
 
     with open("releases.json", "w") as f:
