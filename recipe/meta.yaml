@@ -29,6 +29,7 @@ requirements:
 test:
   requires:
     - pytest
+    - pytest-mock
     - hypothesis
   commands:
     - python -c "import pandas; pandas.test()"
