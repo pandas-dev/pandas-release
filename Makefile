@@ -119,12 +119,12 @@ github-release:
 
 
 conda-forge:
-	./scripts/conda-forge.sh $(TAG)
+	./scripts/conda-forge.sh $(TAG) $(GH_USERNAME)
 
 
 wheels:
 	rm -rf pandas/dist/pandas-$(PANDAS_VERSION)-cp37m-linux_x86_64.whl
-	./scripts/wheels.sh $(TAG)
+	./scripts/wheels.sh $(TAG) $(GH_USERNAME)
 
 
 download-wheels:

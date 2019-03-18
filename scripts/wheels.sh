@@ -9,11 +9,12 @@ then
 fi
 
 PANDAS_VERSION=${1}
+GH_USERNAME=${2}
 
 pushd pandas-wheels
 
 git remote set-url upstream https://github.com/MacPython/pandas-wheels
-git remote set-url origin https://github.com/${2}/pandas-wheels
+git remote set-url origin https://github.com/${GH_USERNAME}/pandas-wheels
 
 git checkout master
 git pull upstream
