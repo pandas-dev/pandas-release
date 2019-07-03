@@ -2,8 +2,8 @@
 TAG ?= v0.24.2
 GH_USERNAME ?= jorisvandenbossche
 
-PANDAS_VERSION=$(TAG:v%=%)
-PANDAS_BASE_VERSION=0.24
+PANDAS_VERSION=$(TAG:v%=%)  # like 0.24.2
+PANDAS_BASE_VERSION=$(shell echo '0.24.2' | awk -F '.' '{OFS="."} { print $$1, $$2}')  # like 0.24
 TARGZ=pandas-$(PANDAS_VERSION).tar.gz
 
 # to ensure pushd and popd works
