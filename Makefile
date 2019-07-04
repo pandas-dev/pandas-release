@@ -71,7 +71,7 @@ conda-test:
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/recipe:/recipe \
 		pandas-build \
-		sh -c "conda build --numpy=1.12 --python=3.6 /recipe --output-folder=/pandas/dist"
+		sh -c "conda build --numpy=1.13 --python=3.6 /recipe --output-folder=/pandas/dist"
 
 pip-test: pandas/dist/$(TARGZ)
 	docker run -it --rm \
