@@ -118,7 +118,6 @@ make push-website:
 
 
 push-tag:
-	# TODO: broken for RC
 	pushd pandas && ../scripts/push-tag.py $(TAG) && popd
 
 
