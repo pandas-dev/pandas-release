@@ -3,7 +3,7 @@ TAG ?= v0.25.0rc0
 GH_USERNAME ?= TomAugspurger
 
 PANDAS_VERSION=$(TAG:v%=%)  														   # like 0.24.2
-PANDAS_BASE_VERSION=$(shell echo '0.24.2' | awk -F '.' '{OFS="."} { print $$1, $$2}')  # like 0.24
+PANDAS_BASE_VERSION=$(shell echo $(PANDAS_VERSION) | awk -F '.' '{OFS="."} { print $$1, $$2}')  # like 0.24
 TARGZ=pandas-$(PANDAS_VERSION).tar.gz
 
 # to ensure pushd and popd works
@@ -67,6 +67,7 @@ pandas/dist/$(TARGZ):
 conda-test:
 	docker run -it --rm \
 		--name=pandas-conda-test \
+		--env PANDAS_VERSION=$(PANDAS_VERSION) \
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/recipe:/recipe \
 		pandas-build \
