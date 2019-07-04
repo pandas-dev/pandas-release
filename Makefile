@@ -84,6 +84,17 @@ pip-test: pandas/dist/$(TARGZ)
 # Docs
 # -----------------------------------------------------------------------------
 
+# this had a non-zero exit, but seemed to succeed
+# Output written on pandas.pdf (2817 pages, 10099368 bytes).
+# Transcript written on pandas.log.
+# Traceback (most recent call last):
+#   File "./make.py", line 372, in <module>
+#     sys.exit(main())
+#   ...
+#   File "/opt/conda/envs/pandas/lib/python3.7/subprocess.py", line 347, in check_call
+#     raise CalledProcessError(retcode, cmd)
+# subprocess.CalledProcessError: Command '('pdflatex', '-interaction=nonstopmode', 'pandas.tex')' returned non-zero exit status 1.
+
 doc:
 	docker run -it --rm \
 		--name=pandas-docs \
@@ -96,10 +107,18 @@ doc:
 upload-doc:
 	rsync -rv -e ssh pandas/doc/build/html/            pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/
 	rsync -rv -e ssh pandas/doc/build/latex/pandas.pdf pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/pandas.pdf
-	ssh pandas.pydata.org "cd /usr/share/nginx/pandas/pandas-docs && ln -sfn version/$(PANDAS_VERSION) stable && cd version && ln -sfn $(PANDAS_VERSION) $(PANDAS_BASE_VERSION)"
+	sudo chgrp -R docs /usr/share/nginx/pandas/pandas-docs
 
+link-stable:
+	ssh pandas.pydata.org "cd /usr/share/nginx/pandas/pandas-docs && ln -sfn version/$(PANDAS_VERSION) stable"
+
+link-version:
+	ssh pandas.pydata.org "cd /usr/share/nginx/pandas/pandas-docs/version && ln -sfn $(PANDAS_VERSION) $(PANDAS_BASE_VERSION)"
+
+push-doc: | upload-doc link-stable link-version
 
 website:
+	# TODO: handle previous.rst, latest.rst
 	pushd pandas-website && \
 		../scripts/update-website.py $(TAG) && \
 		git add . && \

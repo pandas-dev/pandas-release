@@ -9,8 +9,8 @@ then
 	exit 1
 fi
 
-conda update -y conda-build
-conda update -y -c conda-forge conda-smithy conda-forge-pinning
+conda install -y conda-build
+conda install -y -c conda-forge conda-smithy conda-forge-pinning
 
 PANDAS_VERSION="${1:1}"
 PANDAS_SHA=$(openssl dgst -sha256 pandas/dist/pandas-${PANDAS_VERSION}.tar.gz | cut -d ' ' -f 2)
@@ -20,7 +20,11 @@ pushd pandas-feedstock
 git remote set-url upstream https://github.com/conda-forge/pandas-feedstock
 git remote set-url origin https://github.com/${GH_USERNAME}/pandas-feedstock
 
-git checkout master
+if [[ ${PANDAS_VERSION} == *"rc"* ]]; then
+    git checkout dev
+else
+    git checkout master
+fi
 git pull upstream
 
 echo `git status`

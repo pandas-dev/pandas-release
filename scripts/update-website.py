@@ -26,7 +26,7 @@ def update_releases(tag):
 
     if 'rc' in tag:
         data = {
-            'version': tag[1:],
+            'version': tag[1:].split("rc")[0],
             'date': date
         }
         with open("pre_release.json", "w") as f:
