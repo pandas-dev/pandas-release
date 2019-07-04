@@ -1,8 +1,8 @@
 # TO EDIT
 TAG ?= v0.25.0rc0
-GH_USERNAME ?= jorisvandenbossche
+GH_USERNAME ?= TomAugspurger
 
-PANDAS_VERSION=$(TAG:v%=%)  # like 0.24.2
+PANDAS_VERSION=$(TAG:v%=%)  														   # like 0.24.2
 PANDAS_BASE_VERSION=$(shell echo '0.24.2' | awk -F '.' '{OFS="."} { print $$1, $$2}')  # like 0.24
 TARGZ=pandas-$(PANDAS_VERSION).tar.gz
 
@@ -14,10 +14,10 @@ SHELL := /bin/bash
 # -----------------------------------------------------------------------------
 
 init-repos:
-	git clone https://github.com/pandas-dev/pandas            && git -C pandas           remote rename origin upstream && git -C pandas 		  remote add origin https://github.com/$(GH_USERNAME)/pandas
-	git clone https://github.com/pandas-dev/pandas-website    && git -C pandas-website   remote rename origin upstream && git -C pandas-website   remote add origin https://github.com/$(GH_USERNAME)/pandas-website
-	git clone https://github.com/conda-forge/pandas-feedstock && git -C pandas-feedstock remote rename origin upstream && git -C pandas-feedstock remote add origin https://github.com/$(GH_USERNAME)/pandas-feedstock
-	git clone --recursive https://github.com/MacPython/pandas-wheels      && git -C pandas-wheels    remote rename origin upstream && git -C pandas-wheels    remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
+	git clone https://github.com/pandas-dev/pandas                   && git -C pandas           remote rename origin upstream && git -C pandas 		     remote add origin https://github.com/$(GH_USERNAME)/pandas
+	git clone https://github.com/pandas-dev/pandas-website           && git -C pandas-website   remote rename origin upstream && git -C pandas-website   remote add origin https://github.com/$(GH_USERNAME)/pandas-website
+	git clone https://github.com/conda-forge/pandas-feedstock        && git -C pandas-feedstock remote rename origin upstream && git -C pandas-feedstock remote add origin https://github.com/$(GH_USERNAME)/pandas-feedstock
+	git clone --recursive https://github.com/MacPython/pandas-wheels && git -C pandas-wheels    remote rename origin upstream && git -C pandas-wheels    remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
 
 update-repos:
 	git -C pandas checkout master           && git -C pandas pull
@@ -58,7 +58,6 @@ pandas/dist/$(TARGZ):
 		-v ${CURDIR}/scripts:/scripts \
 		pandas-build \
 		sh /scripts/build_sdist.sh
-	sudo chown $$(id -u):$$(id -g) pandas/dist/ --recursive
 
 # -----------------------------------------------------------------------------
 # Tests
