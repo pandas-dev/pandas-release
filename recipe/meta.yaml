@@ -1,4 +1,4 @@
-{% set version = {{ environ.get("PANDAS_VERSION") }}}
+{% set version = environ.get("PANDAS_VERSION") %}
 
 package:
   name: pandas
@@ -8,7 +8,7 @@ source:
   url: ../pandas/dist/pandas-{{ version }}.tar.gz
 
 build:
-  number: 1000
+  number: 0
   script: python -m pip install --no-deps --ignore-installed .
 
 requirements:
