@@ -18,7 +18,15 @@ def check_tag(tag):
 
 
 def get_branch(tag):
-    if tag[-1] == '0':
+    """
+    >>> get_branch("v0.24.0rc0")
+    'master'
+    >>> get_branch("v0.24.0")
+    'master'
+    >>> get_branch("v0.24.1")
+    """
+    ver = version.parse(tag.lstrip('v'))
+    if ver.base_version[-1] == '0':
         # off master
         base = 'master'
     else:

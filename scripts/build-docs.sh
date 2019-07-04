@@ -11,7 +11,6 @@ conda uninstall -y --force pandas ||:
 # python3 -m pip install --no-deps --no-index --find-links=/pandas/dist --only-binary=pandas pandas
 apt-get update && apt-get install -y build-essential
 cd /pandas
-python setup.py build_ext -i && pip install -e .
 
 cd /pandas/doc
 
