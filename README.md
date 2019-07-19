@@ -6,6 +6,13 @@ Release automation for pandas.
   - [  ] `TAG` in `Makefile`
   - [  ] `GH_USERNAME` in `Makefile`
 
+If running for the first time be sure to initialize repos
+
+```sh
+make init-repos
+```
+
+And fork pandas-feedstock and pandas-wheels to your GitHub account.
 
 ```
 # Update repos
@@ -21,6 +28,7 @@ make docker-image docker-doc
 make pandas/dist/<>.sdist
 
 # Final Pip and Conda tests. Do these in parallel.
+# You can optionally do make doc here as well
 make pip-test
 make conda-test
 
@@ -33,7 +41,18 @@ Now manually create a release https://github.com/pandas-dev/pandas/releases
 Make sure to upload the sdist that's in `pandas/dist/` as the "binary".
 Conda-forge uses it.
 
-Start the binary builds
+On pandas you should also now create and tag a new branch, so
+
+```sh
+git checkout -b <TAG>.x
+git push upstream <TAG>.x
+git checkout master
+git commit --allow-empty -m "Start <NEXT_TAG>"
+git tag -a v<NEXT_TAG>.dev0 -m 'DEV: Start <NEXT_TAG> cycle'
+git push upstream master --follow-tags
+```
+
+Start the binary builds.  **For Mac users** you may need to download the GNU version of sed before running this scripts via `brew install gnu-sed`
 
 ```
 # Binaries
@@ -43,6 +62,8 @@ make wheels
 
 Open PRs for each of those.
 
+Note that `make wheels` actually pushes a job to MacPython to produce wheels which we will download later.
+
 Docs. You can cheat and re-tag / rebuild these if needed.
 
 ```
@@ -50,7 +71,8 @@ make doc
 ```
 
 Once the binaries finish, you'll need to manually upload the
-wheels to PyPI
+wheels to PyPI. Assuming the job which `make wheels` triggered on MacPython completed successfully (you may want to double check this)
+you can download a copy of the wheels for Mac / Linux locally.
 
 
 ```
@@ -70,12 +92,32 @@ Finalize the docs
 ```
 make upload-doc
 make website
-make push-website
 ```
 
-The website script is currenlty broken. You may need to manually
-add the next (dev) release, and remove any pre-releases.
+You also need to make edits to the pandas-website to appropriately display items. 
+Ideally this could be done via `make push-website` as the rule exists but the
+intermediary steps aren't fully automated yet.
 
+```sh
+pushd pandas-website
+mv latest.rst previous.rst
+# Recreate latest.rst to match release notes from GH in earlier steps
+# Update pre_release.json and releases.json
+git commit -am "Your updates"
+git push
+make html
+make upload
+```
+
+To make sure /stable and the latest minor revision point to the new release run the following from root
+
+```sh
+popd  # should bring us back to root from pandas-website
+make link-stable
+make link-version
+```
+
+Now check pandas.pydata.org and ensure the sidebar and links are correct!
 
 goto announce.
 
