@@ -1,9 +1,8 @@
 # TO EDIT
-TAG ?= v0.25.0rc0
-GH_USERNAME ?= TomAugspurger
-
-PANDAS_VERSION=$(TAG:v%=%)  														   # like 0.24.2
-PANDAS_BASE_VERSION=$(shell echo $(PANDAS_VERSION) | awk -F '.' '{OFS="."} { print $$1, $$2}')  # like 0.24
+TAG ?= v0.25.0
+GH_USERNAME ?= WillAyd
+PANDAS_VERSION=$(TAG:v%=%)
+PANDAS_BASE_VERSION=$(shell echo $(PANDAS_VERSION) | awk -F '.' '{OFS="."} { print $$1, $$2}')
 TARGZ=pandas-$(PANDAS_VERSION).tar.gz
 
 # to ensure pushd and popd works
@@ -107,7 +106,6 @@ doc:
 upload-doc:
 	rsync -rv -e ssh pandas/doc/build/html/            pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/
 	rsync -rv -e ssh pandas/doc/build/latex/pandas.pdf pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/pandas.pdf
-	sudo chgrp -R docs /usr/share/nginx/pandas/pandas-docs
 
 link-stable:
 	ssh pandas.pydata.org "cd /usr/share/nginx/pandas/pandas-docs && ln -sfn version/$(PANDAS_VERSION) stable"
