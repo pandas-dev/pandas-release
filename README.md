@@ -12,6 +12,9 @@ If running for the first time be sure to initialize repos
 make init-repos
 ```
 
+The `environment.yml` contains the local dependencies. You'll
+also need docker.
+
 And fork pandas-feedstock and pandas-wheels to your GitHub account.
 
 ```

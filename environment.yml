@@ -1,0 +1,11 @@
+name: pandas-release
+channels:
+    - defaults
+    - conda-forge
+dependencies:
+    - packaging
+    - conda-build
+    - conda-smithy
+    - conda-forge-pinnings
+    - lxml
+    - twine
