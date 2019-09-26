@@ -6,7 +6,23 @@ Release automation for pandas.
   - [  ] `TAG` in `Makefile`
   - [  ] `GH_USERNAME` in `Makefile`
 
-If running for the first time be sure to initialize repos
+## **If running for the first time:**
+
+- Create a conda enviroment based on environment.yml
+```sh
+conda env create -f environment.yml
+```
+- Activate the environment 
+```sh
+conda activate pandas-release
+```
+- Be sure you have the following forked on your github
+  - https://github.com/pandas-dev/pandas-website
+  - https://github.com/conda-forge/pandas-feedstock
+  - https://github.com/MacPython/pandas-wheels
+  - https://github.com/pandas-dev/pandas
+
+- Be sure to initialize repos
 
 ```sh
 make init-repos
@@ -14,8 +30,6 @@ make init-repos
 
 The `environment.yml` contains the local dependencies. You'll
 also need docker.
-
-And fork pandas-feedstock and pandas-wheels to your GitHub account.
 
 ```
 # Update repos
