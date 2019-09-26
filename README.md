@@ -28,7 +28,7 @@ make tag
 make docker-image docker-doc
 
 # Build the sdist
-make pandas/dist/<>.sdist
+make pandas/dist/<>.tar.gz
 
 # Final Pip and Conda tests. Do these in parallel.
 # You can optionally do make doc here as well
