@@ -6,6 +6,6 @@ dependencies:
     - packaging
     - conda-build
     - conda-smithy
-    - conda-forge-pinnings
+    - conda-forge-pinning
     - lxml
     - twine
