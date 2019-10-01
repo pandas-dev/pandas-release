@@ -8,22 +8,23 @@ Release automation for pandas.
 
 ## **If running for the first time:**
 
-- Create a conda enviroment based on environment.yml
+- Create a conda enviroment based on environment.yml:
 ```sh
-conda env create -f environment.yml
+conda env create 
 ```
-- Activate the environment 
+- Activate the environment:
 ```sh
 conda activate pandas-release
 ```
-- Be sure you have the following forked on your github
+- Be sure you have the following forked on your github:
   - https://github.com/pandas-dev/pandas-website
   - https://github.com/conda-forge/pandas-feedstock
   - https://github.com/MacPython/pandas-wheels
-  - https://github.com/pandas-dev/pandas
-
-- Be sure to initialize repos
-
+  - https://github.com/pandas-dev/pandas   
+  
+  &nbsp;
+  
+ - Be sure to initialize repos:
 ```sh
 make init-repos
 ```
