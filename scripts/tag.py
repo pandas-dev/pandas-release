@@ -36,6 +36,7 @@ def commit(tag):
     subprocess.check_call(['git', 'clean', '-xdf'])
     print("Creating tag {}".format(tag))
     subprocess.check_call(['git', 'commit', '--allow-empty', '-m',
+                           '--author="Pandas Development Team <pandas-dev@python.org>"',
                            'RLS: {}'.format(tag[1:])])
     subprocess.check_call(['git', 'tag', '-a', tag, '-m',
                            'Version {}'.format(tag[1:])])
