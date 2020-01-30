@@ -95,7 +95,7 @@ pip-test: pandas/dist/$(TARGZ)
 # subprocess.CalledProcessError: Command '('pdflatex', '-interaction=nonstopmode', 'pandas.tex')' returned non-zero exit status 1.
 
 doc:
-	docker run -it --rm \
+	docker run -it \
 		--name=pandas-docs \
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/scripts/build-docs.sh:/build-docs.sh \
@@ -116,23 +116,13 @@ link-version:
 push-doc: | upload-doc link-stable link-version
 
 website:
-	# TODO: handle previous.rst, latest.rst
-	pushd pandas-website && \
-		../scripts/update-website.py $(TAG) && \
-		git add . && \
-		git commit -m "RLS $(TAG)" && \
-		make html && \
+	pushd pandas/web && \
+		./pandas_web.py pandas
 	popd
 
 
-
-make push-website:
-	pushd pandas-website && \
-		git push upstream master && \
-		make html && \
-		make upload && \
-	popd
-
+push-website:
+	rsync  -ravzI -e ssh pandas/web/build/* pandas.pydata.org:/usr/share/nginx/pandas/
 
 push-tag:
 	pushd pandas && ../scripts/push-tag.py $(TAG) && popd

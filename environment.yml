@@ -9,3 +9,10 @@ dependencies:
     - conda-forge-pinning
     - lxml
     - twine
+    # web
+    - markdown
+    - feedparser
+    - pyyaml
+    - requests
+    - jinja2
+
