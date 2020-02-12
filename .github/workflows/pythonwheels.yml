@@ -29,6 +29,7 @@ jobs:
         mkdir temp
         cd temp
         python -m pip install --upgrade pip
+        python -m pip install pytest hypothesis
         python -m pip install pandas --no-index -f ../wheelhouse
         python -c "import pandas; pandas.test()"
         cd ..
@@ -64,6 +65,7 @@ jobs:
         mkdir temp
         cd temp
         python -m pip install --upgrade pip
+        python -m pip install pytest hypothesis
         python -m pip install pandas --no-index -f ../wheelhouse
         python -c "import pandas; pandas.test()"
         cd ..
@@ -98,11 +100,11 @@ jobs:
       run: |
         mkdir temp
         cd temp
-        python -m pip install pytest
+        python -m pip install pytest hypothesis
         python -m pip install pandas --no-index -f ../dist
         python -c "import pandas; pandas.test()"
         cd ..
-    - name: Upload linux wheel artifact
+    - name: Upload wheel artifact
       uses: actions/upload-artifact@v1
       with:
         name: ${{ matrix.python-version }}-macos
@@ -133,11 +135,11 @@ jobs:
       run: |
         mkdir temp
         cd temp
-        python -m pip install pytest
+        python -m pip install pytest hypothesis
         python -m pip install pandas --no-index -f ../dist
         python -c "import pandas; pandas.test()"
         cd ..
-    - name: Upload linux wheel artifact
+    - name: Upload wheel artifact
       uses: actions/upload-artifact@v1
       with:
         name: ${{ matrix.python-version }}-macos
