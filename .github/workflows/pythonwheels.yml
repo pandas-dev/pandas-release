@@ -9,7 +9,10 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8]
     steps:
-    - uses: actions/checkout@master
+    - name: Checkout pandas
+      uses: actions/checkout@master
+      with:
+        repository: pandas-dev/pandas
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -37,7 +40,10 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8]
     steps:
-    - uses: actions/checkout@master
+    - name: Checkout pandas
+      uses: actions/checkout@master
+      with:
+        repository: pandas-dev/pandas
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -65,7 +71,10 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8]
     steps:
-    - uses: actions/checkout@master
+    - name: Checkout pandas
+      uses: actions/checkout@master
+      with:
+        repository: pandas-dev/pandas
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -97,7 +106,10 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8]
     steps:
-    - uses: actions/checkout@master
+    - name: Checkout pandas
+      uses: actions/checkout@master
+      with:
+        repository: pandas-dev/pandas
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
