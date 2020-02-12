@@ -13,13 +13,17 @@ jobs:
       uses: actions/checkout@master
       with:
         repository: pandas-dev/pandas
+    -name: Checkout release repo for build script
+     uses: actions/checkout@master
+     with:
+       path: "pandas-release"
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
     - name: Docker Build
       run: |
-        docker run --rm -e PLAT=manylinux1_x86_64 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 /io/manylinux_build.sh
+        docker run --rm -e PLAT=manylinux1_x86_64 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 /io/pandas-release/manylinux_build.sh
     - name: Install and test wheel
       run: |
         mkdir temp
@@ -44,13 +48,17 @@ jobs:
       uses: actions/checkout@master
       with:
         repository: pandas-dev/pandas
+    -name: Checkout release repo for build script
+     uses: actions/checkout@master
+     with:
+       path: "pandas-release"
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
     - name: Docker Build
       run: |
-        docker run --rm -e PLAT=manylinux1_i686 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_i686 /io/manylinux_build.sh
+        docker run --rm -e PLAT=manylinux1_i686 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_i686 /io/pandas-release/manylinux_build.sh
     - name: Install and test wheel
       run: |
         mkdir temp
@@ -82,7 +90,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install setuptools wheel
+        python -m pip install setuptools wheel cython
     - name: Build wheels
       run: |
         python setup.py bdist_wheel
@@ -117,7 +125,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install setuptools wheel
+        python -m pip install setuptools wheel cython
     - name: Build wheels
       run: |
         python setup.py bdist_wheel
