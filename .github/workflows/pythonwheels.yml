@@ -27,7 +27,7 @@ jobs:
     - name: Upload linux wheel artifact
       uses: actions/upload-artifact@v1
       with:
-        name: ${{ matrix.python-version }}-manylinux
+        name: ${{ matrix.python-version }}-manylinux-x86_64
         path: wheelhouse
 
   manylinux-i686-wheel:
@@ -54,7 +54,7 @@ jobs:
     - name: Upload linux wheel artifact
       uses: actions/upload-artifact@v1
       with:
-        name: ${{ matrix.python-version }}-manylinux
+        name: ${{ matrix.python-version }}-manylinux-i686
         path: wheelhouse
 
   macos-wheel:
@@ -108,5 +108,5 @@ jobs:
     - name: Upload wheel artifact
       uses: actions/upload-artifact@v1
       with:
-        name: ${{ matrix.python-version }}-macos
+        name: ${{ matrix.python-version }}-windows
         path: dist
