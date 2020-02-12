@@ -13,10 +13,10 @@ jobs:
       uses: actions/checkout@master
       with:
         repository: pandas-dev/pandas
-    -name: Checkout release repo for build script
-     uses: actions/checkout@master
-     with:
-       path: "pandas-release"
+    - name: Checkout release repo for build script
+      uses: actions/checkout@master
+      with:
+        path: "pandas-release"
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -48,10 +48,10 @@ jobs:
       uses: actions/checkout@master
       with:
         repository: pandas-dev/pandas
-    -name: Checkout release repo for build script
-     uses: actions/checkout@master
-     with:
-       path: "pandas-release"
+    - name: Checkout release repo for build script
+      uses: actions/checkout@master
+      with:
+        path: "pandas-release"
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
