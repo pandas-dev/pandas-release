@@ -19,7 +19,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Docker Build
       run: |
-        docker run --rm -e PLAT=maylinux1_x86_64 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 /io/manylinux_build.sh
+        docker run --rm -e PLAT=manylinux1_x86_64 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 /io/manylinux_build.sh
     - name: Install and test wheel
       run: |
         mkdir temp
@@ -50,7 +50,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Docker Build
       run: |
-        docker run --rm -e PLAT=maylinux1_i686 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_i686 /io/manylinux_build.sh
+        docker run --rm -e PLAT=manylinux1_i686 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_i686 /io/manylinux_build.sh
     - name: Install and test wheel
       run: |
         mkdir temp
