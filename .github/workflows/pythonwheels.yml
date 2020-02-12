@@ -24,15 +24,6 @@ jobs:
     - name: Docker Build
       run: |
         docker run --rm -e PLAT=manylinux1_x86_64 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 /io/pandas-release/manylinux_build.sh
-    - name: Install and test wheel
-      run: |
-        mkdir temp
-        cd temp
-        python -m pip install --upgrade pip
-        python -m pip install pytest hypothesis
-        python -m pip install pandas --no-index -f ../wheelhouse
-        python -c "import pandas; pandas.test()"
-        cd ..
     - name: Upload linux wheel artifact
       uses: actions/upload-artifact@v1
       with:
@@ -60,15 +51,6 @@ jobs:
     - name: Docker Build
       run: |
         docker run --rm -e PLAT=manylinux1_i686 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_i686 /io/pandas-release/manylinux_build.sh
-    - name: Install and test wheel
-      run: |
-        mkdir temp
-        cd temp
-        python -m pip install --upgrade pip
-        python -m pip install pytest hypothesis
-        python -m pip install pandas --no-index -f ../wheelhouse
-        python -c "import pandas; pandas.test()"
-        cd ..
     - name: Upload linux wheel artifact
       uses: actions/upload-artifact@v1
       with:
@@ -92,18 +74,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install setuptools wheel cython numpy python-dateutil pytz
+        python -m pip install setuptools wheel cython numpy
     - name: Build wheels
       run: |
         python setup.py bdist_wheel
-    - name: Install and test wheel
-      run: |
-        mkdir temp
-        cd temp
-        python -m pip install pytest hypothesis
-        python -m pip install pandas --no-index -f ../dist
-        python -c "import pandas; pandas.test()"
-        cd ..
     - name: Upload wheel artifact
       uses: actions/upload-artifact@v1
       with:
@@ -127,18 +101,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install setuptools wheel cython numpy python-dateutil pytz
+        python -m pip install setuptools wheel cython numpy
     - name: Build wheels
       run: |
         python setup.py bdist_wheel
-    - name: Install and test wheel
-      run: |
-        mkdir temp
-        cd temp
-        python -m pip install pytest hypothesis
-        python -m pip install pandas --no-index -f ../dist
-        python -c "import pandas; pandas.test()"
-        cd ..
     - name: Upload wheel artifact
       uses: actions/upload-artifact@v1
       with:
