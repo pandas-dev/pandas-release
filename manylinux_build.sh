@@ -14,6 +14,7 @@ fi
 PYLOC=/opt/python/cp${PYVER2}-cp${PYVER2}${ABIVER}
 
 ${PYLOC}/bin/python -m pip install --upgrade pip setuptools wheel auditwheel
+${PYLOC}/bin/python -m pip install cython numpy pytz python-dateutil
 
 cd /io
 ${PYLOC}/bin/python setup.py bdist_wheel
