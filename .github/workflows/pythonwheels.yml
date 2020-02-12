@@ -8,56 +8,56 @@ jobs:
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8]
-      steps:
-      - uses: actions/checkout@master
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Docker Build
-        run: |
-          docker run --rm -e PLAT=maylinux1_x86_64 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 /io/manylinux_build.sh
-      - name: Install and test wheel
-        run: |
-          mkdir temp
-          cd temp
-          python -m pip install --upgrade pip
-          python -m pip install pandas --no-index -f ../wheelhouse
-          python -c "import pandas; pandas.test()"
-          cd ..
-      - name: Upload linux wheel artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: ${{ matrix.python-version }}-manylinux
-          path: wheelhouse
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Docker Build
+      run: |
+        docker run --rm -e PLAT=maylinux1_x86_64 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 /io/manylinux_build.sh
+    - name: Install and test wheel
+      run: |
+        mkdir temp
+        cd temp
+        python -m pip install --upgrade pip
+        python -m pip install pandas --no-index -f ../wheelhouse
+        python -c "import pandas; pandas.test()"
+        cd ..
+    - name: Upload linux wheel artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ matrix.python-version }}-manylinux
+        path: wheelhouse
 
   manylinux-i686-wheel:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8]
-      steps:
-      - uses: actions/checkout@master
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Docker Build
-        run: |
-          docker run --rm -e PLAT=maylinux1_i686 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_i686 /io/manylinux_build.sh
-      - name: Install and test wheel
-        run: |
-          mkdir temp
-          cd temp
-          python -m pip install --upgrade pip
-          python -m pip install pandas --no-index -f ../wheelhouse
-          python -c "import pandas; pandas.test()"
-          cd ..
-      - name: Upload linux wheel artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: ${{ matrix.python-version }}-manylinux
-          path: wheelhouse
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Docker Build
+      run: |
+        docker run --rm -e PLAT=maylinux1_i686 -e PYVER=${{ matrix.python-version }} -v `pwd`:/io quay.io/pypa/manylinux1_i686 /io/manylinux_build.sh
+    - name: Install and test wheel
+      run: |
+        mkdir temp
+        cd temp
+        python -m pip install --upgrade pip
+        python -m pip install pandas --no-index -f ../wheelhouse
+        python -c "import pandas; pandas.test()"
+        cd ..
+    - name: Upload linux wheel artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ matrix.python-version }}-manylinux
+        path: wheelhouse
 
   macos-wheel:
     runs-on: macos-latest
