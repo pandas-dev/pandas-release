@@ -65,7 +65,7 @@ jobs:
         # cd to not install the local unbuilt pandas directory
         mkdir temp
         cd temp
-        python -m pip install pandas --no-index -f dist
+        python -m pip install pandas --no-index -f ../dist
         python -c "import pandas"
         cd ..
     - name: Upload wheel artifact
@@ -100,7 +100,7 @@ jobs:
         # cd to not install the local unbuilt pandas directory
         mkdir temp
         cd temp
-        python -m pip install pandas --no-index -f dist
+        python -m pip install pandas --no-index -f ../dist
         python -c "import pandas"
         cd ..
     - name: Upload wheel artifact
