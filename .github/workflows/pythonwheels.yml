@@ -53,7 +53,6 @@ jobs:
         python -m pip install setuptools wheel cython numpy
     - name: Build wheels
       run: |
-        python setup.py build_ext --inplace -j 4
         python setup.py bdist_wheel
     - name: Install and verify wheel
       run: |
@@ -84,7 +83,6 @@ jobs:
         python -m pip install setuptools wheel cython numpy
     - name: Build wheels
       run: |
-        python setup.py build_ext --inplace -j 4
         python setup.py bdist_wheel
     - name: Install and verify wheel
       run: |
