@@ -55,7 +55,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install setuptools wheel cython numpy=1.13.3
+        python -m pip install setuptools wheel cython numpy==1.13.3
     - name: Build wheels
       run: |
         python setup.py bdist_wheel
@@ -90,7 +90,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install setuptools wheel cython numpy=1.13.3
+        python -m pip install setuptools wheel cython numpy==1.13.3
     - name: Build wheels
       run: |
         python setup.py bdist_wheel
