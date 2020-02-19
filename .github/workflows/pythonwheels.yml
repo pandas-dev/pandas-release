@@ -49,6 +49,7 @@ jobs:
         path: wheelhouse
 
   non-linux-wheels:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest, windows-latest]
