@@ -78,6 +78,9 @@ jobs:
     - name: Build wheels
       run: |
         python setup.py bdist_wheel
+      # Set environment variable for macOS; no effect on windows
+      env:
+        MACOSX_DEPLOYMENT_TARGET: 10.9
     - name: Install and verify wheel
       run: |
         python -m pip install pytz python-dateutil
