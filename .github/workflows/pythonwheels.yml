@@ -32,7 +32,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Docker Build
       run: |
-        docker run --rm -e PLAT=manylinux2010_x86_64 -e PYVER=${{ matrix.python-version }} NPVER=${{ matrix.min-numpy }} -v `pwd`:/io quay.io/pypa/manylinux2010_x86_64 /io/pandas-release/manylinux_build.sh
+        docker run --rm -e PLAT=manylinux2010_x86_64 -e PYVER=${{ matrix.python-version }} -e NPVER=${{ matrix.min-numpy }} -v `pwd`:/io quay.io/pypa/manylinux2010_x86_64 /io/pandas-release/manylinux_build.sh
     - name: Install and verify wheel
       run: |
         python -m pip install numpy pytz python-dateutil
