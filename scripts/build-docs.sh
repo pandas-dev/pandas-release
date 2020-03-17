@@ -17,4 +17,5 @@ cd /pandas/doc
 
 ./make.py html
 ./make.py zip_html
+./make.py latex_forced ||:
 ./make.py latex_forced

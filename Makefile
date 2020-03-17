@@ -1,5 +1,5 @@
 # TO EDIT
-TAG ?= v1.0.0
+TAG ?= v1.0.2
 GH_USERNAME ?= TomAugspurger
 PANDAS_VERSION=$(TAG:v%=%)
 PANDAS_BASE_VERSION=$(shell echo $(PANDAS_VERSION) | awk -F '.' '{OFS="."} { print $$1, $$2}')
