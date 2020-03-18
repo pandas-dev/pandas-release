@@ -1,12 +1,13 @@
 #!/usr/bin/env python
-"""Fetch wheels from wheels.scipy.org for a pandas version."""
+"""Fetch wheels from anaconda.org for a pandas version."""
 import argparse
-import pathlib
+import io
+import os
 import sys
-import urllib.parse
 import urllib.request
 
-from lxml import html
+import requests
+import lxml.html
 
 
 def parse_args(args=None):
@@ -16,26 +17,26 @@ def parse_args(args=None):
 
 
 def fetch(version):
-    base = "http://wheels.scipy.org"
-    tree = html.parse(base)
-    root = tree.getroot()
+    url = f"https://anaconda.org/multibuild-wheels-staging/pandas/files?version={version}"
+    r = requests.get(url)
+    t = io.StringIO(r.text)
 
-    dest = pathlib.Path("dist")
-    dest.mkdir(exist_ok=True)
+    root = lxml.html.parse(t).getroot()
+    refs = root.xpath("/html/body/div[2]/div[2]/div/div[9]/div/form/table/tbody/tr/td[4]/a[2]")
+    base = ("http://api.anaconda.org/download/multibuild-wheels-staging/"
+            "pandas/{version}/{whl}")
 
-    files = [
-        x
-        for x in root.xpath("//a/text()")
-        if x.startswith(f"pandas-{version}") and not dest.joinpath(x).exists()
+    urls = [
+            base.format(version=version, whl=a.text)
+            for a in refs
+            if not a.text.endswith('\n')
     ]
+    N = len(urls)
 
-    N = len(files)
-
-    for i, filename in enumerate(files, 1):
-        out = str(dest.joinpath(filename))
-        link = urllib.request.urljoin(base, filename)
-        urllib.request.urlretrieve(link, out)
-        print(f"Downloaded {link} to {out} [{i}/{N}]")
+    for i, url in enumerate(urls, 1):
+        filename = os.path.join("pandas", "dist", url.split("/")[-1])
+        urllib.request.urlretrieve(url, filename)
+        print(f"Downloaded {url} to {filename} [{i}/{N}]")
 
 
 def main(args=None):

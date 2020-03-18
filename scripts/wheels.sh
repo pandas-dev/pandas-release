@@ -22,9 +22,10 @@ git pull upstream
 echo `git status`
 git checkout -B RLS-"${PANDAS_VERSION}"
 
-sed -i 's/BUILD_COMMIT=v.*/BUILD_COMMIT='${PANDAS_VERSION}'/' .travis.yml
+sed -i 's/BUILD_COMMIT: "v.*/BUILD_COMMIT: "'${PANDAS_VERSION}'"/' azure/windows.yml
+sed -i 's/BUILD_COMMIT: "v.*/BUILD_COMMIT: "'${PANDAS_VERSION}'"/' azure/posix.yml
 
-git add .travis.yml
+git add azure
 git commit -m "RLS $PANDAS_VERSION"
 git --no-pager diff HEAD~1
 

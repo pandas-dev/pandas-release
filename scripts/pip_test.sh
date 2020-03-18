@@ -8,4 +8,4 @@ source activate pip-test
 
 python3 -m pip wheel --no-deps --wheel-dir=/pandas/dist $1
 python3 -m pip install --no-deps --no-index --find-links=/pandas/dist --only-binary=pandas pandas
-python3 -c "import pandas; pandas.test()"
+python3 -c "import pandas; pandas.test(extra_args=['-m not clipboard', '--skip-slow', '--skip-network', '--skip-db'])"

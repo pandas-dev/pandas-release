@@ -18,13 +18,13 @@ requirements:
   host:
     - python
     - pip
-    - cython
+    - cython >=0.29.13
     - numpy
   run:
     - python
     - {{ pin_compatible('numpy') }}
-    - python-dateutil >=2.5.*
-    - pytz
+    - python-dateutil >=2.6.1
+    - pytz >=2017.2
 
 test:
   requires:
@@ -32,7 +32,7 @@ test:
     - pytest-mock
     - hypothesis
   commands:
-    - python -c "import pandas; pandas.test()"
+    - python -c "import pandas; pandas.test(extra_args=['-m not clipboard', '--skip-slow', '--skip-network', '--skip-db'])"
 
 about:
   home: http://pandas.pydata.org

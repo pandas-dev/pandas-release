@@ -1,5 +1,6 @@
 # TO EDIT
-TAG ?= v1.0.2
+TAG ?= v1.0.3
+
 GH_USERNAME ?= TomAugspurger
 PANDAS_VERSION=$(TAG:v%=%)
 PANDAS_BASE_VERSION=$(shell echo $(PANDAS_VERSION) | awk -F '.' '{OFS="."} { print $$1, $$2}')
@@ -70,7 +71,7 @@ conda-test:
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/recipe:/recipe \
 		pandas-build \
-		sh -c "conda build --numpy=1.13 --python=3.6 /recipe --output-folder=/pandas/dist"
+		sh -c "conda build --numpy=1.17.3 --python=3.8 /recipe --output-folder=/pandas/dist"
 
 pip-test: pandas/dist/$(TARGZ)
 	docker run -it --rm \
@@ -82,17 +83,6 @@ pip-test: pandas/dist/$(TARGZ)
 # -----------------------------------------------------------------------------
 # Docs
 # -----------------------------------------------------------------------------
-
-# this had a non-zero exit, but seemed to succeed
-# Output written on pandas.pdf (2817 pages, 10099368 bytes).
-# Transcript written on pandas.log.
-# Traceback (most recent call last):
-#   File "./make.py", line 372, in <module>
-#     sys.exit(main())
-#   ...
-#   File "/opt/conda/envs/pandas/lib/python3.7/subprocess.py", line 347, in check_call
-#     raise CalledProcessError(retcode, cmd)
-# subprocess.CalledProcessError: Command '('pdflatex', '-interaction=nonstopmode', 'pandas.tex')' returned non-zero exit status 1.
 
 doc:
 	docker run -it \
@@ -117,7 +107,9 @@ push-doc: | upload-doc link-stable link-version
 
 website:
 	pushd pandas/web && \
-		./pandas_web.py pandas
+		git checkout master && \
+		git pull && \
+		./pandas_web.py pandas && \
 	popd
 
 
