@@ -15,7 +15,7 @@ python setup.py build_ext -i -j 4
 
 cd /pandas/doc
 
-./make.py html
-./make.py zip_html
-./make.py latex_forced ||:
-./make.py latex_forced
+python ./make.py html
+python ./make.py zip_html
+python ./make.py latex_forced ||:
+python ./make.py latex_forced

@@ -1,7 +1,7 @@
 # TO EDIT
-TAG ?= v1.0.3
+TAG ?= v1.0.4
 
-GH_USERNAME ?= TomAugspurger
+GH_USERNAME ?= simonjayhawkins
 PANDAS_VERSION=$(TAG:v%=%)
 PANDAS_BASE_VERSION=$(shell echo $(PANDAS_VERSION) | awk -F '.' '{OFS="."} { print $$1, $$2}')
 TARGZ=pandas-$(PANDAS_VERSION).tar.gz
@@ -59,6 +59,8 @@ pandas/dist/$(TARGZ):
 		pandas-build \
 		sh /scripts/build_sdist.sh
 
+# docker run -it --rm --name=pandas-sdist-build -v C:\Users\simon\pandas-release\scripts:/scripts -v C:\Users\simon\pandas-release\pandas:/pandas pandas-build /bin/bash
+
 # -----------------------------------------------------------------------------
 # Tests
 # These can be done in parallel
@@ -73,12 +75,16 @@ conda-test:
 		pandas-build \
 		sh -c "conda build --numpy=1.17.3 --python=3.8 /recipe --output-folder=/pandas/dist"
 
+# docker run -it --rm --name=pandas-conda-test --env PANDAS_VERSION=1.0.4 -v C:\Users\simon\pandas-release\pandas:/pandas -v C:\Users\simon\pandas-release\recipe:/recipe pandas-build
+
 pip-test: pandas/dist/$(TARGZ)
 	docker run -it --rm \
 		--name=pandas-pip-test \
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/scripts/pip_test.sh:/pip_test.sh \
 		pandas-build /bin/bash /pip_test.sh /pandas/dist/$(TARGZ)
+
+# docker run -it --rm --name=pandas-pip-test -v C:\Users\simon\pandas-release\scripts:/scripts -v C:\Users\simon\pandas-release\pandas:/pandas pandas-build /bin/bash
 
 # -----------------------------------------------------------------------------
 # Docs
@@ -92,6 +98,8 @@ doc:
 		pandas-docs \
 		/build-docs.sh
 
+# docker run -it --name=pandas-docs -v C:\Users\simon\pandas-release\pandas:/pandas -v C:\Users\simon\pandas-release\scripts:/scripts pandas-docs
+# docker start pandas-docs -i
 
 upload-doc:
 	rsync -rv -e ssh pandas/doc/build/html/            pandas.pydata.org:/usr/share/nginx/pandas/pandas-docs/version/$(PANDAS_VERSION)/
@@ -135,9 +143,11 @@ wheels:
 
 
 download-wheels:
-	./scripts/download_wheels.py $(PANDAS_VERSION)
+	python ./scripts/download_wheels.py $(PANDAS_VERSION)
 	# TODO: Fetch from https://www.lfd.uci.edu/~gohlke/pythonlibs/
 
 
 upload-pypi:
 	twine upload pandas/dist/pandas-$(PANDAS_VERSION)*.{whl,tar.gz} --skip-existing
+
+# twine upload pandas/dist/pandas-1.0.4*.{whl,tar.gz} --skip-existing

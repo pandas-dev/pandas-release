@@ -1,5 +1,7 @@
 Release automation for pandas.
 
+Windows users should follow the steps in `windows.md`
+
 ## Steps to a release
 
 - [  ] Manually update 
