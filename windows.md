@@ -10,8 +10,6 @@ ensure the following repositories are forked to your GitHub account
 
 build a docker image with the conda base environment configured and repositories initialized.
 
-TODO: use url for dockerfile to save cloning pandas-release to host machine
-
 change GH_USERNAME to your Github username
 
 ```
@@ -38,15 +36,8 @@ NOTE: safer to build new image if not on metered or slow internet connection.
 make update-repos
 ```
 
-configure email and name for git 
-TODO: get from host or better still use Pandas Development Team as default in the pandas-release docker image build
-
-```
-git config --global user.email "you@example.com"
-git config --global user.name "Your Name"
-```
-
 Tag the release (This doesn't push the tag)
+
 ```
 make tag
 ```
@@ -58,24 +49,14 @@ exit
 
 create the build container
 
-NOTE: this is the make docker-image step if not using Windows
-NOTE: Step 4/4 : COPY pandas /pandas fails until pandas-release/master updated
-
 ```
-docker build -t pandas-build https://raw.githubusercontent.com/pandas-dev/pandas-release/master/Dockerfile
+docker build -t pandas-build .
 ```
 
 build the sdist
 
-NOTE: this is the make pandas/dist/<>.tar.gz step if not using Windows
-TODO: create symlinks so this can be automated
-
 ```
-# docker run --rm -v pandas-release:/pandas-release pandas-build /bin/bash /pandas-release/scripts/build_sdist.sh
-
 docker run -it --rm -v pandas-release:/pandas-release pandas-build /bin/bash
-
-rm -r pandas
 
 ln -s pandas-release/pandas pandas
 
@@ -86,8 +67,108 @@ cd pandas-release/
 exit
 ```
 
+pip tests
+
+```
+docker run -it --rm -v pandas-release:/pandas-release pandas-build /bin/bash
+
+ln -s pandas-release/pandas pandas
+
+cd pandas-release/
+
+./scripts/pip_test.sh /pandas/dist/pandas-1.0.5.tar.gz
+
+exit
+
+```
+
+conda tests
+
+```
+docker run -it --rm --env PANDAS_VERSION=1.0.5 -v pandas-release:/pandas-release pandas-build /bin/bash
+
+ln -s pandas-release/pandas pandas
+
+cd pandas-release/
+
+conda build --numpy=1.17.3 --python=3.8 ./recipe --output-folder=/pandas/dist
+
+exit
+
+```
+
+copy the sdist file to the local host
+
+```
+docker run -it --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp /pandas-release/pandas/dist/pandas-1.0.5.tar.gz /local/"
+```
+
+Push the tag. No going back now.
+
 restart the release container
 
 ```
 docker start pandas-release -i
+
+...
+
+On pandas you should also now create and tag a new branch, so
+
+...
+```
+
+Now manually create a release https://github.com/pandas-dev/pandas/releases
+
+Make sure to upload the sdist as the "binary". Conda-forge uses it.
+
+
+Start the binary builds.
+
+restart the release container
+
+```
+docker start pandas-release -i
+
+make conda-forge
+
+make wheels
+
+exit
+```
+
+Open PRs for each of those.
+
+Note that `make wheels` actually pushes a job to MacPython to produce wheels which we will download later.
+
+
+Docs. You can cheat and re-tag / rebuild these if needed.
+
+<!-- doc:
+	docker run -it \
+		--name=pandas-docs \
+		-v ${CURDIR}/pandas:/pandas \
+		-v ${CURDIR}/scripts/build-docs.sh:/build-docs.sh \
+		pandas-docs \
+		/build-docs.sh -->
+
+TODO build an intermediate doc image (and why pandas conda env not in docker image?)
+```
+docker run -it --name=pandas-docs -v pandas-release:/pandas-release pandas-docs /bin/bash
+
+rm -r pandas
+
+ln -s pandas-release/pandas pandas
+
+cd pandas-release/
+
+# following maybe necessary to prevent segfaults
+conda update -n base -c defaults conda
+
+conda env create --file=/pandas/environment.yml --name=pandas
+
+...
+
+./scripts/build-docs.sh
+
+...
 ```

@@ -16,3 +16,6 @@ WORKDIR pandas-release
 
 RUN make init-repos
 
+RUN git config --global user.email "pandas-dev@python.org"
+
+RUN git config --global user.name "Pandas Development Team"

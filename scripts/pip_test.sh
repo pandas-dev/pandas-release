@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-# Cytyhon is *not* required here.
+# Cython is *not* required here.
 conda create -n pip-test -y python=3.7 numpy pytz python-dateutil pytest pytest-mock hypothesis nomkl
 
 source activate pip-test
