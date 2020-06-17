@@ -1,6 +1,7 @@
 
 
-install docker
+install Docker
+
 ensure the following repositories are forked to your GitHub account
   - https://github.com/pandas-dev/pandas-website
   - https://github.com/conda-forge/pandas-feedstock
@@ -8,7 +9,11 @@ ensure the following repositories are forked to your GitHub account
   - https://github.com/pandas-dev/pandas   
 
 
-build a docker image with the conda base environment configured and repositories initialized.
+Open an Anaconda Prompt
+TODO: resolve git bash Docker volume issues so that make can be used on host
+
+
+build a Docker image with the conda base environment configured and repositories initialized.
 
 change GH_USERNAME to your Github username
 
@@ -16,8 +21,14 @@ change GH_USERNAME to your Github username
 docker build -t pandas-release --build-arg GH_USERNAME=simonjayhawkins -f docker-files/windows/Dockerfile .
 ```
 
-next we will prepare a container for interactive use during the release process and copy the repositories
-into a shared volume for building the distribution and testing.
+next we will prepare a Docker container for interactive use during the release process and copy the repositories
+from the Docker image into a Docker volume for building the distribution and testing.
+
+to start with a clean volume (after a previous release)
+
+```
+docker volume rm pandas-release
+```
 
 change TAG to the release version
 
@@ -25,12 +36,11 @@ change TAG to the release version
 docker run -it --env TAG=v1.0.5 --name=pandas-release -v pandas-release:/pandas-release pandas-release /bin/bash
 ```
 
-the docker container should be now be running
+the Docker release container should be now be running
 
 make sure the repos are up-to-date
 TODO: also make sure conda environment is up-to-date and pandas-release repo is up-to-date if
-re-using an older Docker image (maybe need another script in Makefile)
-NOTE: safer to build new image if not on metered or slow internet connection.
+re-using an older Docker image
 
 ```
 make update-repos
@@ -47,13 +57,17 @@ stop the container
 exit
 ```
 
-create the build container
+create the Docker image for the sdist build, pip test and conda test containers
+TODO: maybe update the image with apt-get for cached build
 
 ```
 docker build -t pandas-build .
 ```
 
 build the sdist
+
+TODO: some of the next steps are repetative. set WORKDIR and symlink to /pandas in pandas-build Docker image instead
+TODO: add container name (as in Makefile) and do not destroy container on exit
 
 ```
 docker run -it --rm -v pandas-release:/pandas-release pandas-build /bin/bash
@@ -68,6 +82,9 @@ exit
 ```
 
 pip tests
+
+TODO: avoid need to pass explicit filename below
+TODO: add container name (as in Makefile) and do not destroy container on exit
 
 ```
 docker run -it --rm -v pandas-release:/pandas-release pandas-build /bin/bash
@@ -84,6 +101,9 @@ exit
 
 conda tests
 
+TODO: add container name (as in Makefile) and do not destroy container on exit
+TODO: avoid need to re-type version below
+
 ```
 docker run -it --rm --env PANDAS_VERSION=1.0.5 -v pandas-release:/pandas-release pandas-build /bin/bash
 
@@ -97,10 +117,11 @@ exit
 
 ```
 
-copy the sdist file to the local host
+copy the sdist file from the Docker volume to the local host
+TODO: avoid need to enter specific filename below (maybe just copy contents of dist directory instead)
 
 ```
-docker run -it --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp /pandas-release/pandas/dist/pandas-1.0.5.tar.gz /local/"
+docker run -t --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp /pandas-release/pandas/dist/pandas-1.0.5.tar.gz /local/"
 ```
 
 Push the tag. No going back now.
@@ -151,7 +172,7 @@ Docs. You can cheat and re-tag / rebuild these if needed.
 		pandas-docs \
 		/build-docs.sh -->
 
-TODO build an intermediate doc image (and why pandas conda env not in docker image?)
+TODO build an intermediate doc image (and why pandas conda env not in Docker image?)
 ```
 docker run -it --name=pandas-docs -v pandas-release:/pandas-release pandas-docs /bin/bash
 
