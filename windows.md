@@ -166,9 +166,14 @@ conda update -n base -c defaults conda
 
 conda env create --file=/pandas/environment.yml --name=pandas
 
-...
-
 ./scripts/build-docs.sh
 
-...
+exit
 ```
+
+copy the built doc files to host and manually inspect html and pdf docs.
+
+```
+docker run -it --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp -r /pandas-release/pandas/doc/build/ /local/pandas-docs"
+```
+
