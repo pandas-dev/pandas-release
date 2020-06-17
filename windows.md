@@ -213,7 +213,29 @@ exit
 
 Copy the built doc files to host and manually inspect html and pdf docs.
 
+**first remove the local pandas-docs directory (just use file manager)**
+<!-- 
+TODO add steps to clean the pandas-docs directory from the docker container before copy
+ -->
 ```
-docker run -it --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp -r /pandas-release/pandas/doc/build/ /local/pandas-docs"
+docker run -t --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp -r /pandas-release/pandas/doc/build/ /local/pandas-docs"
 ```
+
+## Upload the docs
+
+restart the release container
+
+```
+docker start pandas-release -i
+
+# TODO upload ssh keys
+
+make upload-doc
+
+# TODO add steps to update website
+
+```
+
+## Upload the Binarys to PyPI
+
 
