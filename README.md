@@ -93,33 +93,14 @@ Finalize the docs
 
 ```
 make upload-doc
-make website
 ```
 
-You also need to make edits to the pandas-website to appropriately display items. 
-Ideally this could be done via `make push-website` as the rule exists but the
-intermediary steps aren't fully automated yet.
+To make sure /stable and the latest minor revision point to the new release run the following.
 
-```sh
-pushd pandas-website
-mv latest.rst previous.rst
-# Recreate latest.rst to match release notes from GH in earlier steps
-# Update pre_release.json and releases.json
-git commit -am "Your updates"
-git push
-make html
-make upload
 ```
-
-To make sure /stable and the latest minor revision point to the new release run the following from root
-
-```sh
-popd  # should bring us back to root from pandas-website
 make link-stable
 make link-version
 ```
-
-Now check pandas.pydata.org and ensure the sidebar and links are correct!
 
 goto announce.
 

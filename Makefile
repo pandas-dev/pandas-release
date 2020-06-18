@@ -15,14 +15,12 @@ SHELL := /bin/bash
 
 init-repos:
 	git clone https://github.com/pandas-dev/pandas                   && git -C pandas           remote rename origin upstream && git -C pandas 		     remote add origin https://github.com/$(GH_USERNAME)/pandas
-	git clone https://github.com/pandas-dev/pandas-website           && git -C pandas-website   remote rename origin upstream && git -C pandas-website   remote add origin https://github.com/$(GH_USERNAME)/pandas-website
 	git clone https://github.com/conda-forge/pandas-feedstock        && git -C pandas-feedstock remote rename origin upstream && git -C pandas-feedstock remote add origin https://github.com/$(GH_USERNAME)/pandas-feedstock
 	git clone --recursive https://github.com/MacPython/pandas-wheels && git -C pandas-wheels    remote rename origin upstream && git -C pandas-wheels    remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
 
 update-repos:
 	git -C pandas checkout master           && git -C pandas pull
 	git -C pandas-wheels checkout master    && git -C pandas-wheels pull
-	git -C pandas-website checkout master   && git -C pandas-website pull
 	git -C pandas-feedstock checkout master && git -C pandas-feedstock pull
 	pushd pandas-wheels && git submodule update --recursive --remote && popd
 
@@ -104,17 +102,6 @@ link-version:
 	ssh pandas.pydata.org "cd /usr/share/nginx/pandas/pandas-docs/version && ln -sfn $(PANDAS_VERSION) $(PANDAS_BASE_VERSION)"
 
 push-doc: | upload-doc link-stable link-version
-
-website:
-	pushd pandas/web && \
-		git checkout master && \
-		git pull && \
-		./pandas_web.py pandas && \
-	popd
-
-
-push-website:
-	rsync  -ravzI -e ssh pandas/web/build/* pandas.pydata.org:/usr/share/nginx/pandas/
 
 push-tag:
 	pushd pandas && ../scripts/push-tag.py $(TAG) && popd

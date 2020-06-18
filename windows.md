@@ -224,12 +224,12 @@ TODO: add steps to clean the pandas-docs directory from the docker container bef
 docker run -t --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp -r /pandas-release/pandas/doc/build/ /local/pandas-docs"
 ```
 
-## Upload the docs
+## Upload the Docs
 <!-- 
 TODO: add steps to update website and reorder so that docs are uploaded b4 github release
 TODO: add the ssh keys to the Docker image or on container creation
  -->
-Copy ssh key and config into release container and restart container
+Copy ssh key and config into release container and restart container.
 
 ```
 docker cp %userprofile%/.ssh pandas-release:/root/.ssh
@@ -259,6 +259,21 @@ make upload-pypi
 exit
 ```
 
-## Finalize the docs
+## Finalize the Docs
 
-...
+Do this once the wheels are available on PyPI.
+
+```
+docker start pandas-release -i
+
+make link-stable
+
+make link-version
+
+exit
+```
+
+# Announce
+
+- [  ] Announce Mailing List
+- [  ] Announce Twitter
