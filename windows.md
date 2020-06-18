@@ -152,6 +152,8 @@ TODO: does this need to be in interactive mode
 docker start pandas-release -i
 
 make push-tag
+
+exit
 ```
 
 ## Create New Branch
@@ -213,29 +215,50 @@ exit
 
 Copy the built doc files to host and manually inspect html and pdf docs.
 
-**first remove the local pandas-docs directory (just use file manager)**
+**first remove the local pandas-docs directory (just manually use file manager for now)**
 <!-- 
-TODO add steps to clean the pandas-docs directory from the docker container before copy
+TODO: maybe add web server to container
+TODO: add steps to clean the pandas-docs directory from the docker container before copy
  -->
 ```
 docker run -t --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp -r /pandas-release/pandas/doc/build/ /local/pandas-docs"
 ```
 
 ## Upload the docs
-
-restart the release container
+<!-- 
+TODO: add steps to update website and reorder so that docs are uploaded b4 github release
+TODO: add the ssh keys to the Docker image or on container creation
+ -->
+Copy ssh key and config into release container and restart container
 
 ```
+docker cp %userprofile%/.ssh pandas-release:/root/.ssh
+
 docker start pandas-release -i
 
-# TODO upload ssh keys
+chmod 400 ~/.ssh/id_rsa
 
 make upload-doc
 
-# TODO add steps to update website
-
+exit
 ```
 
 ## Upload the Binarys to PyPI
 
+Once the binaries finish, you'll need to manually upload the wheels to PyPI.
 
+Assuming the job which `make wheels` triggered on MacPython completed successfully (you may want to double check this https://anaconda.org/multibuild-wheels-staging/pandas/files) you can download a copy of the wheels locally.
+
+```
+docker start pandas-release -i
+
+make download-wheels
+
+make upload-pypi
+
+exit
+```
+
+## Finalize the docs
+
+...

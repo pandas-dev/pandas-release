@@ -1,6 +1,6 @@
 Release automation for pandas.
 
-Windows users should follow the steps in `windows.md`
+**Windows users should follow the steps in `windows.md`**
 
 ## Steps to a release
 
@@ -75,16 +75,13 @@ Docs. You can cheat and re-tag / rebuild these if needed.
 make doc
 ```
 
-Once the binaries finish, you'll need to manually upload the
-wheels to PyPI. Assuming the job which `make wheels` triggered on MacPython completed successfully (you may want to double check this)
-you can download a copy of the wheels for Mac / Linux locally.
+Once the binaries finish, you'll need to manually upload the wheels to PyPI.
 
+Assuming the job which `make wheels` triggered on MacPython completed successfully (you may want to double check this https://anaconda.org/multibuild-wheels-staging/pandas/files) you can download a copy of the wheels locally.
 
 ```
 make download-wheels
 ```
-
-Christoph Gohlke builds the windows wheels. Fetch from from https://www.lfd.uci.edu/~gohlke/pythonlibs/ and download to the same `dist` directory.
 
 Upload the wheels and sdist
 
@@ -130,7 +127,6 @@ goto announce.
 
 # Finalize
 
-- [  ] Download Christoph's wheels and upload to PyPI
 - [  ] Announce Mailing List
 - [  ] Announce Twitter
 

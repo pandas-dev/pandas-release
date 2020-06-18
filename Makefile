@@ -136,7 +136,6 @@ wheels:
 
 download-wheels:
 	./scripts/download_wheels.py $(PANDAS_VERSION)
-	# TODO: Fetch from https://www.lfd.uci.edu/~gohlke/pythonlibs/
 
 
 upload-pypi:
