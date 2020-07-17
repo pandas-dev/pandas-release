@@ -1,5 +1,7 @@
 Release automation for pandas.
 
+**Windows users should follow the steps in `windows.md`**
+
 ## Steps to a release
 
 - [  ] Manually update 
@@ -73,16 +75,13 @@ Docs. You can cheat and re-tag / rebuild these if needed.
 make doc
 ```
 
-Once the binaries finish, you'll need to manually upload the
-wheels to PyPI. Assuming the job which `make wheels` triggered on MacPython completed successfully (you may want to double check this)
-you can download a copy of the wheels for Mac / Linux locally.
+Once the binaries finish, you'll need to manually upload the wheels to PyPI.
 
+Assuming the job which `make wheels` triggered on MacPython completed successfully (you may want to double check this https://anaconda.org/multibuild-wheels-staging/pandas/files) you can download a copy of the wheels locally.
 
 ```
 make download-wheels
 ```
-
-Christoph Gohlke builds the windows wheels. Fetch from from https://www.lfd.uci.edu/~gohlke/pythonlibs/ and download to the same `dist` directory.
 
 Upload the wheels and sdist
 
@@ -94,33 +93,14 @@ Finalize the docs
 
 ```
 make upload-doc
-make website
 ```
 
-You also need to make edits to the pandas-website to appropriately display items. 
-Ideally this could be done via `make push-website` as the rule exists but the
-intermediary steps aren't fully automated yet.
+To make sure /stable and the latest minor revision point to the new release run the following.
 
-```sh
-pushd pandas-website
-mv latest.rst previous.rst
-# Recreate latest.rst to match release notes from GH in earlier steps
-# Update pre_release.json and releases.json
-git commit -am "Your updates"
-git push
-make html
-make upload
 ```
-
-To make sure /stable and the latest minor revision point to the new release run the following from root
-
-```sh
-popd  # should bring us back to root from pandas-website
 make link-stable
 make link-version
 ```
-
-Now check pandas.pydata.org and ensure the sidebar and links are correct!
 
 goto announce.
 
@@ -128,7 +108,6 @@ goto announce.
 
 # Finalize
 
-- [  ] Download Christoph's wheels and upload to PyPI
 - [  ] Announce Mailing List
 - [  ] Announce Twitter
 
