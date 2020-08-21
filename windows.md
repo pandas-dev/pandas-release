@@ -34,17 +34,28 @@ docker volume rm pandas-release
 ```
 
 **change TAG to the release version**
+
 ```
-docker run -it --env TAG=v1.0.5 --name=pandas-release -v pandas-release:/pandas-release pandas-release /bin/bash
+docker run -it --env TAG=v1.1.1 --name=pandas-release -v pandas-release:/pandas-release pandas-release /bin/bash
 ```
 
 The Docker release container should be now be running.
 
-Make sure the repos are up-to-date
-<!-- 
-TODO: also make sure conda environment is up-to-date and pandas-release repo is up-to-date if
-re-using an older Docker image
- -->
+if using an older Docker image make sure environments and pandas-release repo are up-to-date.
+
+<!-- TODO: maybe add to Makefile -->
+```
+apt-get update && apt-get clean
+git -C /pandas-release pull --ff-only
+
+# not so sure this should have been conda-forge channel
+conda update -c conda-forge conda -y
+
+conda env update -n base --file=/pandas-release/environment.yml
+```
+
+Make sure the repos are up-to-date.
+
 ```
 make update-repos
 ```
@@ -56,6 +67,7 @@ make tag
 ```
 
 Stop the container.
+
 ```
 exit
 ```
@@ -64,46 +76,38 @@ exit
 
 
 Create the Docker image for the sdist build, pip test and conda test containers
-<!-- 
-TODO: maybe update the image with apt-get for cached build
- -->
+
+**change TAG to the release version**
+
+<!-- TODO: setting TAG for the second time here -->
+
 ```
-docker build -t pandas-build .
+docker build -t pandas-build --no-cache .
+
+docker build -t pandas-test --build-arg TAG=v1.1.1 -f docker-files/windows/build/Dockerfile .
 ```
 
 ## Build the sdist
 <!-- 
-TODO: some of the next steps are repetative. set WORKDIR and symlink to /pandas in pandas-build Docker image instead
-TODO: add container name (as in Makefile) and do not destroy container on exit
+TODO: some of the next steps are repetative. symlink to /pandas in pandas-build Docker image instead
  -->
 ```
-docker run -it --rm -v pandas-release:/pandas-release pandas-build /bin/bash
-
-ln -s pandas-release/pandas pandas
-
-cd pandas-release/
-
-./scripts/build_sdist.sh
-
-exit
+docker run --name=pandas-sdist-build -v pandas-release:/pandas-release pandas-test /bin/bash -c "ln -s /pandas-release/pandas /pandas;./scripts/build_sdist.sh"
 ```
 
 ## Pip Tests
 <!-- 
 TODO: avoid need to pass explicit filename below
-TODO: add container name (as in Makefile) and do not destroy container on exit
  -->
 
 **change filename to the release version**
 
 ```
-docker run -it --rm -v pandas-release:/pandas-release pandas-build /bin/bash
+docker run -it --name=pandas-pip-test -v pandas-release:/pandas-release pandas-test /bin/bash
 
-ln -s pandas-release/pandas pandas
+ln -s /pandas-release/pandas /pandas
 
-cd pandas-release/
-
-./scripts/pip_test.sh /pandas/dist/pandas-1.0.5.tar.gz
+./scripts/pip_test.sh /pandas/dist/pandas-1.1.1.tar.gz
 
 exit
 
@@ -111,17 +115,14 @@ exit
 
 ## Conda Tests
 <!-- 
-TODO: add container name (as in Makefile) and do not destroy container on exit
 TODO: avoid need to re-type version below
  -->
  **change PANDAS_VERSION to the release version**
 
 ```
-docker run -it --rm --env PANDAS_VERSION=1.0.5 -v pandas-release:/pandas-release pandas-build /bin/bash
+docker run -it --name=pandas-conda-test --env PANDAS_VERSION=1.1.1 -v pandas-release:/pandas-release pandas-test /bin/bash
 
-ln -s pandas-release/pandas pandas
-
-cd pandas-release/
+ln -s /pandas-release/pandas /pandas
 
 conda build --numpy=1.17.3 --python=3.8 ./recipe --output-folder=/pandas/dist
 
@@ -136,7 +137,7 @@ TODO: avoid need to enter specific filename below (maybe just copy contents of d
 **change filename to the release version**
 
 ```
-docker run -t --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp /pandas-release/pandas/dist/pandas-1.0.5.tar.gz /local/"
+docker run -t --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp /pandas-release/pandas/dist/pandas-1.1.1.tar.gz /local/"
 ```
 
 ## Push the Tag. 
@@ -176,6 +177,8 @@ Restart the release container.
 ```
 docker start pandas-release -i
 
+apt-get install vim
+
 make conda-forge
 
 make wheels
@@ -190,22 +193,14 @@ Note that `make wheels` actually pushes a job to MacPython to produce wheels whi
 
 ## Build the Docs.
 You can cheat and re-tag / rebuild these if needed.
-<!-- 
-TODO build an intermediate doc image (and why pandas conda env not in Docker image?)
- -->
 ```
+docker build -t pandas-docs -f docker-files\windows\docs\Dockerfile .
+
 docker run -it --name=pandas-docs -v pandas-release:/pandas-release pandas-docs /bin/bash
 
-rm -r pandas
+conda activate pandas
 
-ln -s pandas-release/pandas pandas
-
-cd pandas-release/
-
-# following maybe necessary to prevent segfaults
-conda update -n base -c defaults conda
-
-conda env create --file=/pandas/environment.yml --name=pandas
+conda env update -n pandas --file=/pandas/environment.yml
 
 ./scripts/build-docs.sh
 

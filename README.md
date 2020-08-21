@@ -1,6 +1,6 @@
 Release automation for pandas.
 
-**Windows users should follow the steps in `windows.md`**
+**Windows users should follow [these](./windows.md) steps.**
 
 ## Steps to a release
 
