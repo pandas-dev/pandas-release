@@ -36,7 +36,7 @@ docker volume rm pandas-release
 **change TAG to the release version**
 
 ```
-docker run -it --env TAG=v1.1.2 --name=pandas-release -v pandas-release:/pandas-release pandas-release /bin/bash
+docker run -it --env TAG=v1.1.3 --name=pandas-release -v pandas-release:/pandas-release pandas-release /bin/bash
 ```
 
 The Docker release container should be now be running.
@@ -83,7 +83,7 @@ Create the Docker image for the sdist build, pip test and conda test containers
 ```
 docker build -t pandas-build --no-cache .
 
-docker build -t pandas-test --build-arg TAG=v1.1.2 -f docker-files/windows/build/Dockerfile .
+docker build -t pandas-test --build-arg TAG=v1.1.3 -f docker-files/windows/build/Dockerfile .
 ```
 
 ## Build the sdist
@@ -106,7 +106,7 @@ docker run -it --name=pandas-pip-test -v pandas-release:/pandas-release pandas-t
 
 ln -s /pandas-release/pandas /pandas
 
-./scripts/pip_test.sh /pandas/dist/pandas-1.1.2.tar.gz
+./scripts/pip_test.sh /pandas/dist/pandas-1.1.3.tar.gz
 
 exit
 
@@ -119,7 +119,7 @@ TODO: avoid need to re-type version below
  **change PANDAS_VERSION to the release version**
 
 ```
-docker run -it --name=pandas-conda-test --env PANDAS_VERSION=1.1.2 -v pandas-release:/pandas-release pandas-test /bin/bash
+docker run -it --name=pandas-conda-test --env PANDAS_VERSION=1.1.3 -v pandas-release:/pandas-release pandas-test /bin/bash
 
 ln -s /pandas-release/pandas /pandas
 
@@ -136,7 +136,7 @@ TODO: avoid need to enter specific filename below (maybe just copy contents of d
 **change filename to the release version**
 
 ```
-docker run -t --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp /pandas-release/pandas/dist/pandas-1.1.2.tar.gz /local/"
+docker run -t --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp /pandas-release/pandas/dist/pandas-1.1.3.tar.gz /local/"
 ```
 
 ## Push the Tag. 
