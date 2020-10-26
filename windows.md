@@ -7,10 +7,10 @@ Install Docker
 Ensure the following repositories are forked to your GitHub account
   - https://github.com/conda-forge/pandas-feedstock
   - https://github.com/MacPython/pandas-wheels
-  - https://github.com/pandas-dev/pandas   
+  - https://github.com/pandas-dev/pandas
 
 Open an Anaconda Prompt
-<!-- 
+<!--
 TODO: resolve git bash Docker volume issues so that make can be used on host
  -->
 
@@ -36,7 +36,7 @@ docker volume rm pandas-release
 **change TAG to the release version**
 
 ```
-docker run -it --env TAG=v1.1.3 --name=pandas-release -v pandas-release:/pandas-release pandas-release /bin/bash
+docker run -it --env TAG=v1.1.4 --name=pandas-release -v pandas-release:/pandas-release pandas-release /bin/bash
 ```
 
 The Docker release container should be now be running.
@@ -83,11 +83,11 @@ Create the Docker image for the sdist build, pip test and conda test containers
 ```
 docker build -t pandas-build --no-cache .
 
-docker build -t pandas-test --build-arg TAG=v1.1.3 -f docker-files/windows/build/Dockerfile .
+docker build -t pandas-test --build-arg TAG=v1.1.4 -f docker-files/windows/build/Dockerfile .
 ```
 
 ## Build the sdist
-<!-- 
+<!--
 TODO: some of the next steps are repetative. symlink to /pandas in pandas-build Docker image instead
  -->
 ```
@@ -95,57 +95,43 @@ docker run --name=pandas-sdist-build -v pandas-release:/pandas-release pandas-te
 ```
 
 ## Pip Tests
-<!-- 
+<!--
 TODO: avoid need to pass explicit filename below
  -->
 
 **change filename to the release version**
 
 ```
-docker run -it --name=pandas-pip-test -v pandas-release:/pandas-release pandas-test /bin/bash
-
-ln -s /pandas-release/pandas /pandas
-
-./scripts/pip_test.sh /pandas/dist/pandas-1.1.3.tar.gz
-
-exit
-
+docker run --name=pandas-pip-test -v pandas-release:/pandas-release pandas-test /bin/bash -c "ln -s /pandas-release/pandas /pandas;./scripts/pip_test.sh /pandas/dist/pandas-1.1.4.tar.gz"
 ```
 
 ## Conda Tests
-<!-- 
+<!--
 TODO: avoid need to re-type version below
  -->
  **change PANDAS_VERSION to the release version**
 
 ```
-docker run -it --name=pandas-conda-test --env PANDAS_VERSION=1.1.3 -v pandas-release:/pandas-release pandas-test /bin/bash
-
-ln -s /pandas-release/pandas /pandas
-
-conda build --numpy=1.17.3 --python=3.8 ./recipe --output-folder=/pandas/dist
-
-exit
-
+docker run --name=pandas-conda-test --env PANDAS_VERSION=1.1.4 -v pandas-release:/pandas-release pandas-test /bin/bash -c "ln -s /pandas-release/pandas /pandas;conda build --numpy=1.17.3 --python=3.8 ./recipe --output-folder=/pandas/dist"
 ```
 
 ## Copy the sdist File from the Docker Volume to the Local Host.
-<!-- 
+<!--
 TODO: avoid need to enter specific filename below (maybe just copy contents of dist directory instead)
  -->
 **change filename to the release version**
 
 ```
-docker run -t --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp /pandas-release/pandas/dist/pandas-1.1.3.tar.gz /local/"
+docker run -t --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-release /bin/bash -c "cp /pandas-release/pandas/dist/pandas-1.1.4.tar.gz /local/"
 ```
 
-## Push the Tag. 
+## Push the Tag.
 
 **No going back now.**
 
 Restart the release container.
-<!-- 
-TODO: does this need to be in interactive mode 
+<!--
+TODO: does this need to be in interactive mode
  -->
 ```
 docker start pandas-release -i
@@ -209,7 +195,7 @@ exit
 Copy the built doc files to host and manually inspect html and pdf docs.
 
 **first remove the local pandas-docs directory (just manually use file manager for now)**
-<!-- 
+<!--
 TODO: maybe add web server to container
 TODO: add steps to clean the pandas-docs directory from the docker container before copy
  -->
@@ -218,7 +204,7 @@ docker run -t --rm -v %cd%:/local -v pandas-release:/pandas-release pandas-relea
 ```
 
 ## Upload the Docs
-<!-- 
+<!--
 TODO: add steps to update website and reorder so that docs are uploaded b4 github release
 TODO: add the ssh keys to the Docker image or on container creation
  -->
