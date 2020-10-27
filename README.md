@@ -1,10 +1,10 @@
 Release automation for pandas.
 
-**Windows users should follow [these](./windows.md) steps.**
+**Windows users should follow [these](./windows.md) steps or [these](./windows-wsl.md) steps for WSL 2 (experimental).**
 
 ## Steps to a release
 
-- [  ] Manually update 
+- [  ] Manually update
   - [  ] `TAG` in `Makefile`
   - [  ] `GH_USERNAME` in `Makefile`
 
