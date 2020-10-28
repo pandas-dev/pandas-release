@@ -82,3 +82,23 @@ git clone git@github.com:<your-github-username>/pandas-release.git
 cd pandas-release
 git remote add upstream https://github.com/pandas-dev/pandas-release.git
 ```
+
+download conda from https://docs.conda.io/en/latest/miniconda.html#linux-installers and
+install.
+```
+cd
+ln -s /mnt/c/Users/<your-windows-username>/Downloads/ ~/downloads
+sha256sum downloads/Miniconda3-latest-Linux-x86_64.sh
+bash downloads/Miniconda3-latest-Linux-x86_64.sh
+```
+
+close terminal and reopen to activate conda and install pandas-release conda environment
+```
+conda list
+conda update conda
+cd pandas-release
+conda env create -f environment.yml
+conda activate pandas-release
+```
+
+The linux environment is now configured on WSL. Now follow the steps in [README.md](./README.md)
