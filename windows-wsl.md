@@ -102,3 +102,20 @@ conda activate pandas-release
 ```
 
 The linux environment is now configured on WSL. Now follow the steps in [README.md](./README.md)
+
+## View the documentation once built.
+
+first find the path to the browser executable, e.g. chrome
+```
+find /mnt/c/ -name "chrome.exe" 2>/dev/null
+```
+
+then open index.html in the browser
+```
+"/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" pandas/doc/build/html/index.html
+```
+
+and the same for the pdf documentation
+```
+"/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" pandas/doc/build/latex/pandas.pdf
+```

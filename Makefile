@@ -1,7 +1,7 @@
 # TO EDIT
 TAG ?= v1.1.4
 
-GH_USERNAME ?= TomAugspurger
+GH_USERNAME ?= simonjayhawkins
 PANDAS_VERSION=$(TAG:v%=%)
 PANDAS_BASE_VERSION=$(shell echo $(PANDAS_VERSION) | awk -F '.' '{OFS="."} { print $$1, $$2}')
 TARGZ=pandas-$(PANDAS_VERSION).tar.gz
