@@ -63,6 +63,7 @@ configure git manually
 ```
 git config --global user.email "<your-email>"
 git config --global user.name "<your-name>"
+git config --global pull.rebase false
 ```
 
 or copy the configuration from windows.
@@ -112,10 +113,10 @@ find /mnt/c/ -name "chrome.exe" 2>/dev/null
 
 then open index.html in the browser
 ```
-"/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" pandas/doc/build/html/index.html
+"/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" pandas/doc/build/html/index.html
 ```
 
 and the same for the pdf documentation
 ```
-"/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" pandas/doc/build/latex/pandas.pdf
+"/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" pandas/doc/build/latex/pandas.pdf
 ```

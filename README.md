@@ -4,6 +4,11 @@ Release automation for pandas.
 
 ## Steps to a release
 
+The `environment.yml` contains the local dependencies. You'll
+also need docker.
+
+And fork pandas-feedstock and pandas-wheels to your GitHub account.
+
 - [  ] Manually update
   - [  ] `TAG` in `Makefile`
   - [  ] `GH_USERNAME` in `Makefile`
@@ -13,11 +18,6 @@ If running for the first time be sure to initialize repos
 ```sh
 make init-repos
 ```
-
-The `environment.yml` contains the local dependencies. You'll
-also need docker.
-
-And fork pandas-feedstock and pandas-wheels to your GitHub account.
 
 ```
 # Update repos
@@ -30,7 +30,7 @@ make tag
 make docker-image docker-doc
 
 # Build the sdist
-make pandas/dist/<>.tar.gz
+make sdist
 
 # Final Pip and Conda tests. Do these in parallel.
 # You can optionally do make doc here as well
@@ -39,6 +39,22 @@ make conda-test
 
 # Push the tag. No going back now.
 make push-tag
+```
+
+Start the binary build.  **For Mac users** you may need to download the GNU version of sed before running this scripts via `brew install gnu-sed`
+
+```
+make wheels
+```
+
+Open PRs for each of those.
+
+Note that `make wheels` actually pushes a job to MacPython to produce wheels which we will download later.
+
+Docs. You can cheat and re-tag / rebuild these if needed.
+
+```
+make doc
 ```
 
 Now manually create a release https://github.com/pandas-dev/pandas/releases
@@ -55,24 +71,6 @@ git checkout master
 git commit --allow-empty -m "Start <NEXT_TAG>"
 git tag -a v<NEXT_TAG>.dev0 -m 'DEV: Start <NEXT_TAG> cycle'
 git push upstream master --follow-tags
-```
-
-Start the binary builds.  **For Mac users** you may need to download the GNU version of sed before running this scripts via `brew install gnu-sed`
-
-```
-# Binaries
-make conda-forge
-make wheels
-```
-
-Open PRs for each of those.
-
-Note that `make wheels` actually pushes a job to MacPython to produce wheels which we will download later.
-
-Docs. You can cheat and re-tag / rebuild these if needed.
-
-```
-make doc
 ```
 
 Once the binaries finish, you'll need to manually upload the wheels to PyPI.

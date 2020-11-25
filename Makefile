@@ -1,7 +1,8 @@
 # TO EDIT
-TAG ?= v1.1.4
-
+# TAG ?= v1.2.0rc0
+TAG ?= v1.1.5
 GH_USERNAME ?= simonjayhawkins
+
 PANDAS_VERSION=$(TAG:v%=%)
 PANDAS_BASE_VERSION=$(shell echo $(PANDAS_VERSION) | awk -F '.' '{OFS="."} { print $$1, $$2}')
 TARGZ=pandas-$(PANDAS_VERSION).tar.gz
@@ -14,15 +15,12 @@ SHELL := /bin/bash
 # -----------------------------------------------------------------------------
 
 init-repos:
-	git clone https://github.com/pandas-dev/pandas                   && git -C pandas           remote rename origin upstream && git -C pandas 		     remote add origin https://github.com/$(GH_USERNAME)/pandas
-	git clone https://github.com/conda-forge/pandas-feedstock        && git -C pandas-feedstock remote rename origin upstream && git -C pandas-feedstock remote add origin https://github.com/$(GH_USERNAME)/pandas-feedstock
-	git clone --recursive https://github.com/MacPython/pandas-wheels && git -C pandas-wheels    remote rename origin upstream && git -C pandas-wheels    remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
+	git clone https://github.com/pandas-dev/pandas       && git -C pandas           remote rename origin upstream && git -C pandas 		     remote add origin https://github.com/$(GH_USERNAME)/pandas
+	git clone https://github.com/MacPython/pandas-wheels && git -C pandas-wheels    remote rename origin upstream && git -C pandas-wheels    remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
 
 update-repos:
 	git -C pandas checkout master           && git -C pandas pull
 	git -C pandas-wheels checkout master    && git -C pandas-wheels pull
-	git -C pandas-feedstock checkout master && git -C pandas-feedstock pull
-	pushd pandas-wheels && git submodule update --recursive --remote && popd
 
 # -----------------------------------------------------------------------------
 # Git Tag
@@ -37,10 +35,11 @@ tag:
 #  Builder Images
 # -----------------------------------------------------------------------------
 
-docker-image: pandas
+docker-image:
 	docker build -t pandas-build .
-
-
+	# docker build -t pandas-build \
+	# 	--build-arg USER_ID=$(shell id -u) \
+	# 	--build-arg GROUP_ID=$(shell id -g) .
 docker-doc:
 	docker build -t pandas-docs -f docker-files/docs/Dockerfile .
 
@@ -49,13 +48,14 @@ docker-doc:
 # sdist
 # -----------------------------------------------------------------------------
 
-pandas/dist/$(TARGZ):
+sdist:
 	docker run -it --rm \
 		--name=pandas-sdist-build \
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/scripts:/scripts \
 		pandas-build \
 		sh /scripts/build_sdist.sh
+	sudo chown -R $(shell id -u):$(shell id -g) pandas/dist/
 
 # -----------------------------------------------------------------------------
 # Tests
