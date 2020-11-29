@@ -1,13 +1,13 @@
-Release automation for pandas.
+# Release automation for pandas.
 
-**Windows users should follow [these](./windows.md) steps or [these](./windows-wsl.md) steps for WSL 2 (experimental).**
+**Windows users should follow [these](./windows-wsl.md) steps.**
 
 ## Steps to a release
 
 The `environment.yml` contains the local dependencies. You'll
 also need docker.
 
-And fork pandas-feedstock and pandas-wheels to your GitHub account.
+And fork pandas-wheels to your GitHub account.
 
 - [  ] Manually update
   - [  ] `TAG` in `Makefile`
@@ -33,10 +33,13 @@ make docker-image docker-doc
 make sdist
 
 # Final Pip and Conda tests. Do these in parallel.
-# You can optionally do make doc here as well
 make pip-test
 make conda-test
 
+# Docs. You can cheat and re-tag / rebuild these if needed.
+make doc
+
+```
 # Push the tag. No going back now.
 make push-tag
 ```
@@ -50,12 +53,6 @@ make wheels
 Open PRs for each of those.
 
 Note that `make wheels` actually pushes a job to MacPython to produce wheels which we will download later.
-
-Docs. You can cheat and re-tag / rebuild these if needed.
-
-```
-make doc
-```
 
 Now manually create a release https://github.com/pandas-dev/pandas/releases
 

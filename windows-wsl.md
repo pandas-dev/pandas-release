@@ -6,7 +6,6 @@ see https://docs.docker.com/docker-for-windows/wsl/#prerequisites for prerequisi
 
 Ensure the following repositories are forked to your GitHub account
   - https://github.com/pandas-dev/pandas-release
-  - https://github.com/conda-forge/pandas-feedstock
   - https://github.com/MacPython/pandas-wheels
   - https://github.com/pandas-dev/pandas
 

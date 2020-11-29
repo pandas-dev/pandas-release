@@ -1,6 +1,6 @@
 # TO EDIT
-# TAG ?= v1.2.0rc0
-TAG ?= v1.1.5
+TAG ?= v1.2.0rc0
+# TAG ?= v1.1.5
 GH_USERNAME ?= simonjayhawkins
 
 PANDAS_VERSION=$(TAG:v%=%)
@@ -15,8 +15,12 @@ SHELL := /bin/bash
 # -----------------------------------------------------------------------------
 
 init-repos:
-	git clone https://github.com/pandas-dev/pandas       && git -C pandas           remote rename origin upstream && git -C pandas 		     remote add origin https://github.com/$(GH_USERNAME)/pandas
-	git clone https://github.com/MacPython/pandas-wheels && git -C pandas-wheels    remote rename origin upstream && git -C pandas-wheels    remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
+	git clone https://github.com/pandas-dev/pandas \
+		&& git -C pandas remote rename origin upstream \
+		&& git -C pandas remote add origin https://github.com/$(GH_USERNAME)/pandas
+	git clone https://github.com/MacPython/pandas-wheels \
+		&& git -C pandas-wheels remote rename origin upstream \
+		&& git -C pandas-wheels remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
 
 update-repos:
 	git -C pandas checkout master           && git -C pandas pull
