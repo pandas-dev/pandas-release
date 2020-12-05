@@ -39,9 +39,17 @@ make conda-test
 # Docs. You can cheat and re-tag / rebuild these if needed.
 make doc
 
-```
 # Push the tag. No going back now.
 make push-tag
+
+# you may also need to create and tag a new branch, so for example:
+
+git checkout -b 1.2.x
+git push upstream 1.2.x
+git checkout master
+git commit --allow-empty -m "Start 1.3.0"
+git tag -a v1.3.0.dev0 -m 'DEV: Start 1.3.0'
+git push upstream master --follow-tags
 ```
 
 Start the binary build.  **For Mac users** you may need to download the GNU version of sed before running this scripts via `brew install gnu-sed`
@@ -50,25 +58,20 @@ Start the binary build.  **For Mac users** you may need to download the GNU vers
 make wheels
 ```
 
-Open PRs for each of those.
+Open a PR at https://github.com/MacPython/pandas-wheels/pulls.
 
 Note that `make wheels` actually pushes a job to MacPython to produce wheels which we will download later.
+
+While the wheels are building, upload the built docs to the web server
+
+```
+make upload-doc
+```
 
 Now manually create a release https://github.com/pandas-dev/pandas/releases
 
 Make sure to upload the sdist that's in `pandas/dist/` as the "binary".
 Conda-forge uses it.
-
-On pandas you should also now create and tag a new branch, so
-
-```sh
-git checkout -b <TAG>.x
-git push upstream <TAG>.x
-git checkout master
-git commit --allow-empty -m "Start <NEXT_TAG>"
-git tag -a v<NEXT_TAG>.dev0 -m 'DEV: Start <NEXT_TAG> cycle'
-git push upstream master --follow-tags
-```
 
 Once the binaries finish, you'll need to manually upload the wheels to PyPI.
 
@@ -86,9 +89,6 @@ make upload-pypi
 
 Finalize the docs
 
-```
-make upload-doc
-```
 
 To make sure /stable and the latest minor revision point to the new release run the following.
 
@@ -105,16 +105,6 @@ goto announce.
 
 - [  ] Announce Mailing List
 - [  ] Announce Twitter
-
------
-
-## Initial Setup
-
-```
-# 1. Initialize Git Repositories
-make init-repos
-
-``````
 
 ---
 
