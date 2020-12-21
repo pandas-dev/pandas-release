@@ -22,7 +22,7 @@ def check_tag(tag):
 
 
 def checkout(tag):
-    if tag[-1] == '0' or 'rc' in tag:
+    if 'rc0' in tag:
         # off master
         base = 'master'
     else:
