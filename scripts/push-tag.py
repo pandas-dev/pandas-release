@@ -22,11 +22,12 @@ def get_branch(tag):
     >>> get_branch("v0.24.0rc0")
     'master'
     >>> get_branch("v0.24.0")
-    'master'
+    '0.24.x'
     >>> get_branch("v0.24.1")
+    '0.24.x'
     """
     ver = version.parse(tag.lstrip('v'))
-    if ver.base_version[-1] == '0':
+    if 'rc0' in tag:
         # off master
         base = 'master'
     else:
