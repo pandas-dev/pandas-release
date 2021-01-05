@@ -55,7 +55,7 @@ pandas/dist/$(TARGZ):
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/scripts:/scripts \
 		pandas-build \
-		sh /scripts/build_sdist.sh
+		/scripts/build_sdist.sh
 
 # -----------------------------------------------------------------------------
 # Tests
