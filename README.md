@@ -38,6 +38,7 @@ make conda-test
 
 # Docs. You can cheat and re-tag / rebuild these if needed.
 make doc
+./build-docs.sh
 
 # Push the tag. No going back now.
 make push-tag

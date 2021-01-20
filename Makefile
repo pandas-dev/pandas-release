@@ -1,5 +1,5 @@
 # TO EDIT
-TAG ?= v1.2.0
+TAG ?= v1.2.1
 GH_USERNAME ?= simonjayhawkins
 
 PANDAS_VERSION=$(TAG:v%=%)
@@ -91,7 +91,7 @@ doc:
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/scripts/build-docs.sh:/build-docs.sh \
 		pandas-docs \
-		/build-docs.sh
+		/bin/bash
 
 
 upload-doc:

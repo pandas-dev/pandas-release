@@ -2,62 +2,21 @@
 
 ## Preparing for Your First Release.
 
-see https://docs.docker.com/docker-for-windows/wsl/#prerequisites for prerequisites
+Install Docker
 
 Ensure the following repositories are forked to your GitHub account
   - https://github.com/pandas-dev/pandas-release
   - https://github.com/MacPython/pandas-wheels
   - https://github.com/pandas-dev/pandas
 
+see https://docs.microsoft.com/en-us/windows/wsl/install-win10 for Windows Subsystem for Linux installation instructions
 
-### Setting up WSL 2.
-
-Install Docker (This will activate WSL2)
-
-Install Ubuntu 20.04 LTS from the Windows Store
-
-Launch Ubuntu 20.04 LTS from the start menu to set-up for first use.
-
-Launch Docker desktop
-
-go to Settings > Resources > WSL Integration.
-
-You might see
-
-```
-You don't have any WSL 2 distro. Please convert a WSL 1 distro to WSL 2, or install a new distro and it will appear here.
-
-More info
-```
-
-click on More Info and follow steps.
-
-```
-PS C:\Users\simon> wsl -l -v
-  NAME                   STATE           VERSION
-* docker-desktop         Running         2
-  Ubuntu-20.04           Running         1
-  docker-desktop-data    Running         2
-PS C:\Users\simon> wsl --set-version Ubuntu-20.04 2
-Conversion in progress, this may take a few minutes...
-For information on key differences with WSL 2 please visit https://aka.ms/wsl2
-Conversion complete.
-PS C:\Users\simon> wsl --set-default-version 2
-For information on key differences with WSL 2 please visit https://aka.ms/wsl2
-PS C:\Users\simon> wsl --set-default Ubuntu-20.04
-PS C:\Users\simon> wsl -l -v
-  NAME                   STATE           VERSION
-* Ubuntu-20.04           Running         2
-  docker-desktop         Running         2
-  docker-desktop-data    Running         2
-PS C:\Users\simon>
-```
 
 ### Preparing the release environment.
 
 Start Ubuntu 20.04 LTS
 
-configure git manually
+either configure git manually
 
 ```
 git config --global user.email "<your-email>"
@@ -107,15 +66,15 @@ The linux environment is now configured on WSL. Now follow the steps in [README.
 
 first find the path to the browser executable, e.g. chrome
 ```
-find /mnt/c/ -name "chrome.exe" 2>/dev/null
+find /mnt/c/ -name "msedge.exe" 2>/dev/null
 ```
 
 then open index.html in the browser
 ```
-"/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" pandas/doc/build/html/index.html
+"/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe" pandas/doc/build/html/index.html
 ```
 
 and the same for the pdf documentation
 ```
-"/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" pandas/doc/build/latex/pandas.pdf
+"/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe" pandas/doc/build/latex/pandas.pdf
 ```
