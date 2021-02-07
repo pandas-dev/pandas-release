@@ -64,7 +64,9 @@ The linux environment is now configured on WSL. Now follow the steps in [README.
 
 ## View the documentation once built.
 
-first find the path to the browser executable, e.g. chrome
+Note: The Linux filesystem is accessible using File Explorer from the Dev Channel of the Windows Insider Program.
+
+otherwise first find the path to the browser executable, e.g. Microsoft Edge
 ```
 find /mnt/c/ -name "msedge.exe" 2>/dev/null
 ```
