@@ -72,11 +72,6 @@ While the wheels are building, upload the built docs to the web server
 make upload-doc
 ```
 
-Now manually create a release https://github.com/pandas-dev/pandas/releases
-
-Make sure to upload the sdist that's in `pandas/dist/` as the "binary".
-Conda-forge uses it.
-
 Once the binaries finish, you'll need to manually upload the wheels to PyPI.
 
 Assuming the job which `make wheels` triggered on MacPython completed successfully (you may want to double check this https://anaconda.org/multibuild-wheels-staging/pandas/files) you can download a copy of the wheels locally.
@@ -84,6 +79,17 @@ Assuming the job which `make wheels` triggered on MacPython completed successful
 ```
 make download-wheels
 ```
+
+if rc0, create version link for the docs to use in the github release announcement
+
+```
+make link-version
+```
+
+Now manually create a release https://github.com/pandas-dev/pandas/releases
+
+Make sure to upload the sdist that's in `pandas/dist/` as the "binary".
+Conda-forge uses it.
 
 Upload the wheels and sdist
 
@@ -101,6 +107,12 @@ To make sure /stable and the latest minor revision point to the new release run 
 ```
 make link-stable
 make link-version
+```
+
+if rc we need to manually create a PR since the conda-forge bot does not do this automatically on the dev branch. 
+
+```
+make conda-forge
 ```
 
 goto announce.

@@ -20,10 +20,15 @@ init-repos:
 	git clone https://github.com/MacPython/pandas-wheels \
 		&& git -C pandas-wheels remote rename origin upstream \
 		&& git -C pandas-wheels remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
+	git clone https://github.com/conda-forge/pandas-feedstock \
+		&& git -C pandas-feedstock remote rename origin upstream \
+		&& git -C pandas-feedstock remote add origin https://github.com/$(GH_USERNAME)/pandas-feedstock
+
 
 update-repos:
 	git -C pandas checkout master           && git -C pandas pull
 	git -C pandas-wheels checkout master    && git -C pandas-wheels pull
+	git -C pandas-feedstock checkout master && git -C pandas-feedstock pull
 
 # -----------------------------------------------------------------------------
 # Git Tag
