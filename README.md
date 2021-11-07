@@ -27,9 +27,10 @@ make update-repos
 make tag
 
 # Build the doc and test images
-make docker-image docker-doc
+make docker-image
+make docker-doc # seperate terminal - takes 10-20 mins to solve env
 
-# Build the sdist
+# Build the sdist (can do this in parallel with building docker-doc image above)
 make sdist
 
 # Final Pip and Conda tests. Do these in parallel.
@@ -40,6 +41,10 @@ make conda-test
 make doc
 ./build-docs.sh
 exit
+
+# Visually check docs
+python -m http.server --directory pandas/doc/build/html/
+python -m http.server --directory pandas/doc/build/latex/
 
 # Push the tag. No going back now.
 make push-tag

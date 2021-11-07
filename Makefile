@@ -1,5 +1,5 @@
 # TO EDIT
-TAG ?= v1.3.4
+TAG ?= v1.3.5
 GH_USERNAME ?= simonjayhawkins
 
 PANDAS_VERSION=$(TAG:v%=%)
@@ -45,11 +45,8 @@ tag:
 
 docker-image:
 	docker build -t pandas-build .
-	# docker build -t pandas-build \
-	# 	--build-arg USER_ID=$(shell id -u) \
-	# 	--build-arg GROUP_ID=$(shell id -g) .
 docker-doc:
-	docker build -t pandas-docs -f docker-files/docs/Dockerfile .
+	DOCKER_BUILDKIT=1 docker build --progress=plain -t pandas-docs -f docker-files/docs/Dockerfile .
 
 
 # -----------------------------------------------------------------------------
