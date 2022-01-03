@@ -2,7 +2,7 @@
 set -e
 
 # Cython is *not* required here.
-conda create -n pip-test -y python=3.7 numpy pytz python-dateutil pytest pytest-xdist pytest-mock hypothesis nomkl
+conda create -n pip-test -y python=3.8 numpy pytz python-dateutil pytest pytest-xdist pytest-mock hypothesis nomkl
 
 source activate pip-test
 

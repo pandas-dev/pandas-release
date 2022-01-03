@@ -1,5 +1,5 @@
 # TO EDIT
-TAG ?= v1.3.5
+TAG ?= v1.4.0rc0
 GH_USERNAME ?= simonjayhawkins
 
 PANDAS_VERSION=$(TAG:v%=%)
