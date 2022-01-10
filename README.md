@@ -52,11 +52,11 @@ make push-tag
 # you may also need to create and tag a new branch, so for example:
 
 cd pandas
-git checkout -b 1.3.x
-git push upstream 1.3.x
+git checkout -b 1.4.x
+git push upstream 1.4.x
 git checkout master
-git commit --allow-empty -m "Start 1.4.0"
-git tag -a v1.4.0.dev0 -m 'DEV: Start 1.4.0'
+git commit --allow-empty -m "Start 1.5.0"
+git tag -a v1.5.0.dev0 -m 'DEV: Start 1.5.0'
 git push upstream master --follow-tags
 cd ..
 ```
