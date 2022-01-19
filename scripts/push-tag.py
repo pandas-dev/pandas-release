@@ -20,7 +20,7 @@ def check_tag(tag):
 def get_branch(tag):
     """
     >>> get_branch("v0.24.0rc0")
-    'master'
+    'main'
     >>> get_branch("v0.24.0")
     '0.24.x'
     >>> get_branch("v0.24.1")
@@ -28,8 +28,8 @@ def get_branch(tag):
     """
     ver = version.parse(tag.lstrip('v'))
     if 'rc0' in tag:
-        # off master
-        base = 'master'
+        # off main
+        base = 'main'
     else:
         base = '.'.join([tag[1:].rsplit('.', 1)[0], 'x'])
 

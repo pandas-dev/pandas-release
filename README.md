@@ -54,10 +54,10 @@ make push-tag
 cd pandas
 git checkout -b 1.4.x
 git push upstream 1.4.x
-git checkout master
+git checkout main
 git commit --allow-empty -m "Start 1.5.0"
 git tag -a v1.5.0.dev0 -m 'DEV: Start 1.5.0'
-git push upstream master --follow-tags
+git push upstream main --follow-tags
 cd ..
 ```
 
