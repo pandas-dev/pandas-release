@@ -123,6 +123,7 @@ conda-forge:
 wheels:
 	rm -rf pandas/dist/pandas-$(PANDAS_VERSION)-cp38m-linux_x86_64.whl
 	rm -rf pandas/dist/pandas-$(PANDAS_VERSION)-cp38-cp38m-linux_x86_64.whl
+	rm -rf pandas/dist/pandas-$(PANDAS_VERSION)-cp38-cp38-linux_x86_64.whl
 	./scripts/wheels.sh $(TAG) $(GH_USERNAME)
 
 
