@@ -1,5 +1,5 @@
 # TO EDIT
-TAG ?= v1.4.1
+TAG ?= v1.4.2
 GH_USERNAME ?= simonjayhawkins
 
 PANDAS_VERSION=$(TAG:v%=%)
@@ -28,7 +28,7 @@ init-repos:
 update-repos:
 	git -C pandas checkout main             && git -C pandas pull
 	git -C pandas-wheels checkout master    && git -C pandas-wheels pull
-	git -C pandas-feedstock checkout master && git -C pandas-feedstock pull
+	git -C pandas-feedstock checkout main   && git -C pandas-feedstock pull
 
 # -----------------------------------------------------------------------------
 # Git Tag

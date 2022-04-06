@@ -22,7 +22,7 @@ git remote set-url origin https://github.com/${GH_USERNAME}/pandas-feedstock
 if [[ ${PANDAS_VERSION} == *"rc"* ]]; then
     git checkout dev
 else
-    git checkout master
+    git checkout main
 fi
 git pull upstream
 
