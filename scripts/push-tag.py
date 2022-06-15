@@ -20,15 +20,16 @@ def check_tag(tag):
 def get_branch(tag):
     """
     >>> get_branch("v0.24.0rc0")
-    'master'
+    'main'
     >>> get_branch("v0.24.0")
-    'master'
+    '0.24.x'
     >>> get_branch("v0.24.1")
+    '0.24.x'
     """
     ver = version.parse(tag.lstrip('v'))
-    if ver.base_version[-1] == '0':
-        # off master
-        base = 'master'
+    if 'rc0' in tag:
+        # off main
+        base = 'main'
     else:
         base = '.'.join([tag[1:].rsplit('.', 1)[0], 'x'])
 

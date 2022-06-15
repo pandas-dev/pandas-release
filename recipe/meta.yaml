@@ -18,7 +18,7 @@ requirements:
   host:
     - python
     - pip
-    - cython >=0.29.13
+    - cython >=0.29.30, <3
     - numpy
   run:
     - python
@@ -29,10 +29,11 @@ requirements:
 test:
   requires:
     - pytest
+    - pytest-xdist
     - pytest-mock
     - hypothesis
   commands:
-    - python -c "import pandas; pandas.test(extra_args=['-m not clipboard', '--skip-slow', '--skip-network', '--skip-db'])"
+    - python -c "import pandas; pandas.test(extra_args=['-m not clipboard', '--skip-slow', '--skip-network', '--skip-db', '-n=2'])"
 
 about:
   home: http://pandas.pydata.org

@@ -1,7 +1,7 @@
 # TO EDIT
-TAG ?= v1.1.0
+TAG ?= v1.4.3
+GH_USERNAME ?= simonjayhawkins
 
-GH_USERNAME ?= TomAugspurger
 PANDAS_VERSION=$(TAG:v%=%)
 PANDAS_BASE_VERSION=$(shell echo $(PANDAS_VERSION) | awk -F '.' '{OFS="."} { print $$1, $$2}')
 TARGZ=pandas-$(PANDAS_VERSION).tar.gz
@@ -14,15 +14,21 @@ SHELL := /bin/bash
 # -----------------------------------------------------------------------------
 
 init-repos:
-	git clone https://github.com/pandas-dev/pandas                   && git -C pandas           remote rename origin upstream && git -C pandas 		     remote add origin https://github.com/$(GH_USERNAME)/pandas
-	git clone https://github.com/conda-forge/pandas-feedstock        && git -C pandas-feedstock remote rename origin upstream && git -C pandas-feedstock remote add origin https://github.com/$(GH_USERNAME)/pandas-feedstock
-	git clone --recursive https://github.com/MacPython/pandas-wheels && git -C pandas-wheels    remote rename origin upstream && git -C pandas-wheels    remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
+	git clone https://github.com/pandas-dev/pandas \
+		&& git -C pandas remote rename origin upstream \
+		&& git -C pandas remote add origin https://github.com/$(GH_USERNAME)/pandas
+	git clone https://github.com/MacPython/pandas-wheels \
+		&& git -C pandas-wheels remote rename origin upstream \
+		&& git -C pandas-wheels remote add origin https://github.com/$(GH_USERNAME)/pandas-wheels
+	git clone https://github.com/conda-forge/pandas-feedstock \
+		&& git -C pandas-feedstock remote rename origin upstream \
+		&& git -C pandas-feedstock remote add origin https://github.com/$(GH_USERNAME)/pandas-feedstock
+
 
 update-repos:
-	git -C pandas checkout master           && git -C pandas pull
+	git -C pandas checkout main             && git -C pandas pull
 	git -C pandas-wheels checkout master    && git -C pandas-wheels pull
-	git -C pandas-feedstock checkout master && git -C pandas-feedstock pull
-	pushd pandas-wheels && git submodule update --recursive --remote && popd
+	git -C pandas-feedstock checkout main   && git -C pandas-feedstock pull
 
 # -----------------------------------------------------------------------------
 # Git Tag
@@ -37,25 +43,24 @@ tag:
 #  Builder Images
 # -----------------------------------------------------------------------------
 
-docker-image: pandas
+docker-image:
 	docker build -t pandas-build .
-
-
 docker-doc:
-	docker build -t pandas-docs -f docker-files/docs/Dockerfile .
+	DOCKER_BUILDKIT=1 docker build --progress=plain -t pandas-docs -f docker-files/docs/Dockerfile .
 
 
 # -----------------------------------------------------------------------------
 # sdist
 # -----------------------------------------------------------------------------
 
-pandas/dist/$(TARGZ):
+sdist:
 	docker run -it --rm \
 		--name=pandas-sdist-build \
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/scripts:/scripts \
 		pandas-build \
 		sh /scripts/build_sdist.sh
+	sudo chown -R $(shell id -u):$(shell id -g) pandas/dist/
 
 # -----------------------------------------------------------------------------
 # Tests
@@ -69,7 +74,7 @@ conda-test:
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/recipe:/recipe \
 		pandas-build \
-		sh -c "conda build --numpy=1.17.3 --python=3.8 /recipe --output-folder=/pandas/dist"
+		sh -c "conda build --numpy=1.17.3 --python=3.8 /recipe --output-folder=/pandas/dist -c conda-forge"
 
 pip-test: pandas/dist/$(TARGZ)
 	docker run -it --rm \
@@ -88,7 +93,7 @@ doc:
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/scripts/build-docs.sh:/build-docs.sh \
 		pandas-docs \
-		/build-docs.sh
+		/bin/bash
 
 
 upload-doc:
@@ -116,8 +121,9 @@ conda-forge:
 
 
 wheels:
-	rm -rf pandas/dist/pandas-$(PANDAS_VERSION)-cp37m-linux_x86_64.whl
-	rm -rf pandas/dist/pandas-$(PANDAS_VERSION)-cp37-cp37m-linux_x86_64.whl
+	rm -rf pandas/dist/pandas-$(PANDAS_VERSION)-cp38m-linux_x86_64.whl
+	rm -rf pandas/dist/pandas-$(PANDAS_VERSION)-cp38-cp38m-linux_x86_64.whl
+	rm -rf pandas/dist/pandas-$(PANDAS_VERSION)-cp38-cp38-linux_x86_64.whl
 	./scripts/wheels.sh $(TAG) $(GH_USERNAME)
 
 

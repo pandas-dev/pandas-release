@@ -22,9 +22,9 @@ def check_tag(tag):
 
 
 def checkout(tag):
-    if tag[-1] == '0' or 'rc' in tag:
-        # off master
-        base = 'master'
+    if 'rc0' in tag:
+        # off main
+        base = 'main'
     else:
         base = '.'.join([tag[1:].rsplit('.', 1)[0], 'x'])
 

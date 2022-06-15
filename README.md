@@ -1,10 +1,15 @@
-Release automation for pandas.
+# Release automation for pandas.
 
-**Windows users should follow the steps in `windows.md`**
+**Windows users should follow [these](./windows-wsl.md) steps.**
 
 ## Steps to a release
 
-- [  ] Manually update 
+The `environment.yml` contains the local dependencies. You'll
+also need docker.
+
+And fork pandas-wheels to your GitHub account.
+
+- [  ] Manually update
   - [  ] `TAG` in `Makefile`
   - [  ] `GH_USERNAME` in `Makefile`
 
@@ -14,11 +19,6 @@ If running for the first time be sure to initialize repos
 make init-repos
 ```
 
-The `environment.yml` contains the local dependencies. You'll
-also need docker.
-
-And fork pandas-feedstock and pandas-wheels to your GitHub account.
-
 ```
 # Update repos
 make update-repos
@@ -27,52 +27,54 @@ make update-repos
 make tag
 
 # Build the doc and test images
-make docker-image docker-doc
+make docker-image
+make docker-doc # seperate terminal - takes 10-20 mins to solve env
 
-# Build the sdist
-make pandas/dist/<>.tar.gz
+# Build the sdist (can do this in parallel with building docker-doc image above)
+make sdist
 
 # Final Pip and Conda tests. Do these in parallel.
-# You can optionally do make doc here as well
 make pip-test
 make conda-test
 
+# Docs. You can cheat and re-tag / rebuild these if needed.
+make doc
+./build-docs.sh
+exit
+
+# Visually check docs
+python -m http.server --directory pandas/doc/build/html/
+python -m http.server --directory pandas/doc/build/latex/
+
 # Push the tag. No going back now.
 make push-tag
+
+# you may also need to create and tag a new branch, so for example:
+
+cd pandas
+git checkout -b 1.4.x
+git push upstream 1.4.x
+git checkout main
+git commit --allow-empty -m "Start 1.5.0"
+git tag -a v1.5.0.dev0 -m 'DEV: Start 1.5.0'
+git push upstream main --follow-tags
+cd ..
 ```
 
-Now manually create a release https://github.com/pandas-dev/pandas/releases
-
-Make sure to upload the sdist that's in `pandas/dist/` as the "binary".
-Conda-forge uses it.
-
-On pandas you should also now create and tag a new branch, so
-
-```sh
-git checkout -b <TAG>.x
-git push upstream <TAG>.x
-git checkout master
-git commit --allow-empty -m "Start <NEXT_TAG>"
-git tag -a v<NEXT_TAG>.dev0 -m 'DEV: Start <NEXT_TAG> cycle'
-git push upstream master --follow-tags
-```
-
-Start the binary builds.  **For Mac users** you may need to download the GNU version of sed before running this scripts via `brew install gnu-sed`
+Start the binary build.  **For Mac users** you may need to download the GNU version of sed before running this scripts via `brew install gnu-sed`
 
 ```
-# Binaries
-make conda-forge
 make wheels
 ```
 
-Open PRs for each of those.
+Open a PR at https://github.com/MacPython/pandas-wheels/pulls.
 
 Note that `make wheels` actually pushes a job to MacPython to produce wheels which we will download later.
 
-Docs. You can cheat and re-tag / rebuild these if needed.
+While the wheels are building, upload the built docs to the web server
 
 ```
-make doc
+make upload-doc
 ```
 
 Once the binaries finish, you'll need to manually upload the wheels to PyPI.
@@ -83,6 +85,17 @@ Assuming the job which `make wheels` triggered on MacPython completed successful
 make download-wheels
 ```
 
+if rc0, create version link for the docs to use in the github release announcement
+
+```
+make link-version
+```
+
+Now manually create a release https://github.com/pandas-dev/pandas/releases
+
+Make sure to upload the sdist that's in `pandas/dist/` as the "binary".
+Conda-forge uses it.
+
 Upload the wheels and sdist
 
 ```
@@ -91,15 +104,20 @@ make upload-pypi
 
 Finalize the docs
 
-```
-make upload-doc
-```
 
 To make sure /stable and the latest minor revision point to the new release run the following.
+
+**DO NOT DO THIS STEP FOR A RELEASE CANDIDATE**
 
 ```
 make link-stable
 make link-version
+```
+
+if rc we need to manually create a PR since the conda-forge bot does not do this automatically on the dev branch. 
+
+```
+make conda-forge
 ```
 
 goto announce.
@@ -110,16 +128,6 @@ goto announce.
 
 - [  ] Announce Mailing List
 - [  ] Announce Twitter
-
------
-
-## Initial Setup
-
-```
-# 1. Initialize Git Repositories
-make init-repos
-
-``````
 
 ---
 
