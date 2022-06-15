@@ -18,7 +18,7 @@ requirements:
   host:
     - python
     - pip
-    - cython >=0.29.13
+    - cython >=0.29.30, <3
     - numpy
   run:
     - python

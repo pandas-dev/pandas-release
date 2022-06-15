@@ -1,5 +1,5 @@
 # TO EDIT
-TAG ?= v1.4.2
+TAG ?= v1.4.3
 GH_USERNAME ?= simonjayhawkins
 
 PANDAS_VERSION=$(TAG:v%=%)
@@ -74,7 +74,7 @@ conda-test:
 		-v ${CURDIR}/pandas:/pandas \
 		-v ${CURDIR}/recipe:/recipe \
 		pandas-build \
-		sh -c "conda build --numpy=1.17.3 --python=3.8 /recipe --output-folder=/pandas/dist"
+		sh -c "conda build --numpy=1.17.3 --python=3.8 /recipe --output-folder=/pandas/dist -c conda-forge"
 
 pip-test: pandas/dist/$(TARGZ)
 	docker run -it --rm \
